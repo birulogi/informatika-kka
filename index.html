@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD Kelompok - SDLC A4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Pengaturan Standar Kertas A4 */
+        @page { 
+            size: A4; 
+            margin: 10mm; 
+        }
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white !important; padding: 0 !important; } 
+            .card { 
+                border: 1.5px solid #0f172a !important; 
+                box-shadow: none !important; 
+                break-inside: avoid; /* Mencegah elemen terpotong antar halaman */
+            } 
+            .bg-dark-navy { background: white !important; }
+            header { border: 2px solid #0f172a !important; color: black !important; }
+            header h1, header p { color: black !important; }
+        }
+        .bg-dark-navy { background-color: #020617; }
+        .card { background: white; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); border-left: 8px solid #0ea5e9; }
+        .input-underline { border-bottom: 2px solid #e2e8f0; background: transparent; width: 100%; font-weight: bold; font-size: 0.875rem; padding: 0.25rem 0; outline: none; }
+        .input-underline:focus { border-color: #0ea5e9; }
+    </style>
+</head>
+<body class="bg-dark-navy p-4 md:p-8 font-sans">
+
+    <div class="max-w-[210mm] mx-auto space-y-5">
+        
+        <header class="bg-slate-900 text-white p-6 rounded-2xl flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-black uppercase italic tracking-tighter text-sky-400">LKPD PROYEK TEKNOLOGI DIGITAL</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">TP 11.2.1 | Alur Pengembangan (SDLC)</p>
+            </div>
+            <div class="no-print flex gap-2">
+                <a href="mandiri.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">Mandiri ➜</a>
+                <button onclick="window.print()" class="bg-sky-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase">CETAK LKPD TP.11.2.1 KELOMPOK ⎙</button>
+            </div>
+        </header>
+
+        <section class="card">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="bg-slate-900 text-sky-400 px-2 py-1 rounded font-bold text-xs text-[10px]">I</span>
+                <h3 class="font-bold text-slate-800 uppercase text-xs">Identitas Kelompok</h3>
+            </div>
+            <div class="grid grid-cols-4 gap-4 mb-4">
+                <div class="col-span-1">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase">Kelas</label>
+                    <select class="input-underline">
+                        <option>11-1</option><option>11-2</option><option>11-5</option><option>11-6</option>
+                    </select>
+                </div>
+                <div class="col-span-1">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase">Pilih Kelompok</label>
+                    <select class="input-underline text-sky-600">
+                        <option>Kelompok 1</option><option>Kelompok 2</option><option>Kelompok 3</option>
+                        <option>Kelompok 4</option><option>Kelompok 5</option><option>Kelompok 6</option>
+                    </select>
+                </div>
+                <div class="col-span-2">
+                    <label class="text-[9px] font-bold text-slate-400 uppercase">Nama Aplikasi Proyek Utama</label>
+                    <input type="text" class="input-underline" placeholder="...">
+                </div>
+            </div>
+
+            <table class="w-full text-[11px] border-collapse border border-slate-200">
+                <thead class="bg-slate-900 text-sky-400 uppercase text-[9px]">
+                    <tr>
+                        <th class="p-2 border border-slate-700 w-1/3">Peran</th>
+                        <th class="p-2 border border-slate-700 text-left">Nama Lengkap</th>
+                        <th class="p-2 border border-slate-700 no-print w-16">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="member-list">
+                    <tr class="bg-slate-50 font-bold">
+                        <td class="p-2 border uppercase text-[9px]">Ketua Kelompok</td>
+                        <td class="p-0 border"><input type="text" class="w-full p-2 bg-transparent outline-none"></td>
+                        <td class="p-2 border text-center no-print text-slate-300">-</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button onclick="addRow()" class="no-print w-full mt-2 py-2 border-2 border-dashed border-sky-200 text-sky-500 font-bold text-[9px] uppercase hover:bg-sky-50 transition-all">+ Tambah Anggota</button>
+        </section>
+
+        <section class="card">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="bg-slate-900 text-sky-400 px-2 py-1 rounded font-bold text-xs text-[10px]">II</span>
+                <h3 class="font-bold text-slate-800 uppercase text-xs">Penjelasan Alur & Strategi</h3>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-[11px]">
+                <div>
+                    <label class="font-bold text-slate-400 uppercase text-[9px]">A. Integrasi Sistem (Python & Kodular)</label>
+                    <textarea class="w-full p-3 bg-slate-50 rounded-lg h-20 border mt-1 outline-none italic"></textarea>
+                </div>
+                <div>
+                    <label class="font-bold text-slate-400 uppercase text-[9px]">B. Alur Komunikasi Tim</label>
+                    <textarea class="w-full p-3 bg-slate-50 rounded-lg h-20 border mt-1 outline-none italic"></textarea>
+                </div>
+                <div class="col-span-2 p-3 bg-slate-900 rounded-lg flex items-center justify-between">
+                    <div class="flex gap-3 items-center text-white text-[10px]">
+                        <span class="text-sky-400 font-bold uppercase">C. Model:</span>
+                        <label><input type="radio" name="model"> Waterfall</label>
+                        <label><input type="radio" name="model"> Agile</label>
+                    </div>
+                    <input type="text" class="bg-transparent border-b border-slate-600 text-sky-300 text-xs w-1/2 text-center italic" placeholder="Alasan memilih model...">
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="flex items-center gap-2 mb-3">
+                <span class="bg-slate-900 text-sky-400 px-2 py-1 rounded font-bold text-xs text-[10px]">III</span>
+                <h3 class="font-bold text-slate-800 uppercase text-xs">Analisis Tahapan SDLC</h3>
+            </div>
+			<p class="text-[9px] text-slate-500 mb-4 font-bold italic uppercase tracking-widest">*Tebaklah tahapan SDLC berdasarkan aktivitas dan output!</p>
+            <table class="w-full text-[10px] border-2 border-slate-900">
+                <thead class="bg-slate-900 text-sky-400 uppercase text-[8px]">
+                    <tr>
+                        <th class="p-3 border border-slate-700">Aktivitas Praktik</th>
+                        <th class="p-3 border border-slate-700 w-1/3">Tahapan SDLC</th>
+                        <th class="p-3 border border-slate-700 w-1/4 text-sky-300">Contoh Output</th>
+                    </tr>
+                </thead>
+                <tbody id="sdlc-shuffle-body"></tbody>
+            </table>
+        </section>
+
+    </div>
+
+    <script>
+        // Penomoran Anggota Otomatis
+        function addRow() {
+            const list = document.getElementById('member-list');
+            const row = document.createElement('tr');
+            row.className = "member-row";
+            row.innerHTML = `
+                <td class="p-2 border font-medium text-slate-500 uppercase text-[9px] role-label">Anggota Tim</td>
+                <td class="p-0 border"><input type="text" class="w-full p-2 outline-none"></td>
+                <td class="p-2 border text-center no-print">
+                    <button onclick="this.parentElement.parentElement.remove(); renumber();" class="text-red-500 font-bold">✕</button>
+                </td>
+            `;
+            list.appendChild(row);
+            renumber();
+        }
+
+        function renumber() {
+            const labels = document.querySelectorAll('.role-label');
+            labels.forEach((label, i) => { label.innerText = `Anggota Tim ${i + 1}`; });
+        }
+
+        for(let i=0; i<5; i++) addRow();
+
+        // Pengacak Tabel SDLC
+        const tasks = [
+            { a: "Briefing tim & penyusunan jadwal.", o: "LOGBOOK" },
+            { a: "Riset fitur & data kebutuhan pengguna.", o: "DAFTAR FITUR" },
+            { a: "Membuat Flowchart & Mockup UI.", o: "BLUEPRINT" },
+            { a: "Coding Python / Blok Kodular.", o: "SOURCE CODE" },
+            { a: "Uji coba fungsional & cari error.", o: "LAPORAN TES" },
+            { a: "Update fitur & perbaikan bug.", o: "VERSI BARU" }
+        ];
+
+        const tbody = document.getElementById('sdlc-shuffle-body');
+        tasks.sort(() => Math.random() - 0.5).forEach((t, i) => {
+            tbody.innerHTML += `
+                <tr class="${i % 2 === 0 ? 'bg-slate-50' : 'bg-white'} italic">
+                    <td class="p-3 border font-bold text-[9px]">${t.a}</td>
+                    <td class="p-0 border bg-sky-50"><input type="text" class="w-full p-3 text-center font-black text-sky-700 uppercase outline-none bg-transparent" placeholder="?"></td>
+                    <td class="p-3 border text-center font-black text-slate-400 uppercase text-[9px]">${t.o}</td>
+                </tr>`;
+        });
+    </script>
+</body>
+</html>

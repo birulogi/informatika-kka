@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD Mandiri - SAPA TERISI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @page { size: A4; margin: 10mm; }
+        @media print { .no-print { display: none !important; } body { background: white !important; } .card { border: 1.5px solid #020617 !important; } }
+        .bg-dark-navy { background-color: #020617; }
+        #canvas-container { position: relative; height: 430px; background-color: #f8fafc; border: 2px dashed #38bdf8; border-radius: 0.5rem; overflow: hidden; }
+        .shape { position: absolute; padding: 8px; min-width: 90px; border: 2px solid #020617; background: white; text-align: center; font-size: 9px; font-weight: 800; box-shadow: 3px 3px 0px #38bdf8; text-transform: uppercase; z-index: 10; }
+    </style>
+</head>
+<body class="bg-dark-navy p-3 font-sans text-slate-900">
+    <div class="max-w-[210mm] mx-auto space-y-3">
+        <header class="bg-slate-900 text-white p-4 rounded-xl flex justify-between items-center border-b-4 border-sky-500">
+            <div>
+                <h1 class="text-xl font-black uppercase italic text-sky-400">IV. ANALISIS MANDIRI: APLIKASI SAPA</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Laporan Individu: Fitur Sapaan Otomatis</p>
+            </div>
+            <div class="no-print flex gap-2">
+                <a href="index.html" class="bg-slate-700 text-white px-3 py-2 rounded-lg text-[9px] font-black uppercase">⇠ KEMBALI</a>
+                <button onclick="window.print()" class="bg-sky-600 text-[9px] px-4 py-2 rounded-lg font-black uppercase text-white shadow-lg border border-sky-400 transition-all">CETAK MANDIRI ⎙</button>
+            </div>
+        </header>
+
+        <section class="bg-white p-4 rounded-xl border-l-8 border-sky-600 shadow-md card">
+            <div class="grid grid-cols-3 gap-6">
+                <div><label class="text-[10px] font-black uppercase italic text-slate-400">NAMA SISWA</label><div class="border-b-2 font-bold text-sm text-sky-600 py-1">Dewi Lestari</div></div>
+                <div><label class="text-[10px] font-black uppercase italic text-slate-400">KELAS</label><div class="border-b-2 font-bold text-sm py-1">11-2</div></div>
+                <div><label class="text-[10px] font-black uppercase italic text-slate-400">JUDUL FITUR</label><div class="border-b-2 font-bold text-sm py-1">Logika Waktu & Sapaan Sopan</div></div>
+            </div>
+        </section>
+
+        <section class="bg-white p-4 rounded-xl border-l-8 border-sky-600 shadow-md card">
+            <h3 class="font-black text-sm uppercase mb-3 italic underline decoration-sky-500 decoration-2">A. Analisis Kebutuhan (SDLC 1)</h3>
+            <div class="space-y-2 text-[11px]">
+                <div class="flex gap-4 items-center">
+                    <p class="w-56 font-bold text-slate-700">1. Identifikasi Masalah:</p>
+                    <div class="flex-1 p-2 bg-slate-50 border rounded italic">Pengguna sering merasa kaku saat berinteraksi dengan chatbot yang bahasanya terlalu kaku dan tidak menyesuaikan waktu.</div>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <p class="w-56 font-bold text-slate-700">2. Kebutuhan Fungsional:</p>
+                    <div class="flex-1 p-2 bg-slate-50 border rounded italic">Aplikasi harus bisa mengambil data waktu sistem (jam) dan mengeluarkan teks "Selamat Pagi", "Siang", atau "Sore" diikuti nama pengguna.</div>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <p class="w-56 font-bold text-slate-700">3. Kebutuhan Non-Fungsional:</p>
+                    <div class="flex-1 p-2 bg-slate-50 border rounded italic">Kecepatan respon aplikasi dalam mendeteksi waktu dan menyapa harus di bawah 1 detik agar terasa natural.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-4 rounded-xl border-l-8 border-sky-600 shadow-md card">
+            <h3 class="font-black text-sm uppercase mb-2 italic underline decoration-sky-500 decoration-2">B. Perancangan Sistem (SDLC 2)</h3>
+            <div id="canvas-container">
+                <div class="shape" style="left: 45%; top: 10px; border-radius: 50px;">MULAI</div>
+                <div class="shape" style="left: 45%; top: 80px;">INPUT NAMA</div>
+                <div class="shape" style="left: 41%; top: 160px; width: 120px; height: 120px; transform: rotate(45deg);"><div style="transform: rotate(-45deg); margin-top: 25px;">JAM < 11.00?</div></div>
+                <div class="shape" style="left: 20%; top: 200px;">"HALO, SELAMAT PAGI!"</div>
+                <div class="shape" style="left: 70%; top: 200px;">"HALO, SELAMAT SIANG!"</div>
+                <div class="shape" style="left: 45%; top: 350px; border-radius: 50px;">SELESAI</div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

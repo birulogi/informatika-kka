@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD Kelompok - TERISI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @page { size: A4; margin: 10mm; }
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white !important; padding: 0 !important; } 
+            .card { border: 1.5px solid #0f172a !important; shadow: none !important; break-inside: avoid; } 
+            .bg-dark-navy { background: white !important; }
+            header { border: 2px solid #0f172a !important; color: black !important; }
+            header h1, header p { color: black !important; }
+        }
+        .bg-dark-navy { background-color: #020617; }
+        .card { background: white; border-radius: 1rem; padding: 1.5rem; border-left: 8px solid #0ea5e9; }
+        .input-underline { border-bottom: 2px solid #e2e8f0; background: transparent; width: 100%; font-weight: bold; font-size: 0.875rem; padding: 0.25rem 0; outline: none; }
+    </style>
+</head>
+<body class="bg-dark-navy p-4 font-sans">
+    <div class="max-w-[210mm] mx-auto space-y-5">
+        <header class="bg-slate-900 text-white p-6 rounded-2xl flex justify-between items-center shadow-xl border-b-4 border-sky-500">
+            <div>
+                <h1 class="text-xl font-black uppercase italic text-sky-400 leading-none">LKPD KELOMPOK - SDLC</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">TP 11.2.1 | Contoh Pengisian Proyek Utama</p>
+            </div>
+            <div class="no-print flex gap-2">
+                <a href="mandiri.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-indigo-500 transition-all">Mandiri ➜</a>
+                <button onclick="window.print()" class="bg-sky-600 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase shadow-lg border border-sky-400">CETAK KELOMPOK ⎙</button>
+            </div>
+        </header>
+
+        <section class="card shadow-md">
+            <div class="grid grid-cols-4 gap-4 mb-4">
+                <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400">KELAS</label><div class="input-underline">11-2</div></div>
+                <div class="col-span-1"><label class="text-[9px] font-bold text-slate-400">KELOMPOK</label><div class="input-underline text-sky-600">Kelompok 1</div></div>
+                <div class="col-span-2"><label class="text-[9px] font-bold text-slate-400">APLIKASI UTAMA</label><div class="input-underline">SAPA (Sistem Asisten Pengingat & Adab)</div></div>
+            </div>
+            <table class="w-full text-[11px] border-collapse border border-slate-200">
+                <thead class="bg-slate-900 text-sky-400 uppercase text-[9px]">
+                    <tr><th class="p-2 border border-slate-700 w-1/3">Peran</th><th class="p-2 border border-slate-700">Nama Lengkap</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="p-2 border font-bold uppercase text-[9px]">Ketua Kelompok</td><td class="p-2 border italic text-slate-600">Rizky Ramadhan</td></tr>
+                    <tr><td class="p-2 border font-bold uppercase text-[9px]">Anggota Tim 1</td><td class="p-2 border italic text-slate-600">Dewi Lestari</td></tr>
+                    <tr><td class="p-2 border font-bold uppercase text-[9px]">Anggota Tim 2</td><td class="p-2 border italic text-slate-600">Fajar Nugraha</td></tr>
+                    <tr><td class="p-2 border font-bold uppercase text-[9px]">Anggota Tim 3</td><td class="p-2 border italic text-slate-600">Siti Aminah</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="card shadow-md text-[11px]">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="font-bold text-slate-400 uppercase text-[9px]">A. Integrasi Sistem</label>
+                    <div class="p-3 bg-slate-50 border rounded-lg h-24 italic mt-1 leading-relaxed">Kodular digunakan sebagai UI/Frontend aplikasi mobile untuk input nama, sedangkan Python bertindak sebagai logic engine untuk menentukan waktu dan jenis sapaan yang sesuai (Pagi/Siang/Sore).</div>
+                </div>
+                <div>
+                    <label class="font-bold text-slate-400 uppercase text-[9px]">B. Alur Komunikasi Tim</label>
+                    <div class="p-3 bg-slate-50 border rounded-lg h-24 italic mt-1 leading-relaxed">Tim menggunakan WhatsApp Group untuk koordinasi harian dan GitHub untuk menyimpan progress source code. Pertemuan tatap muka dilakukan setiap Jumat untuk integrasi fitur.</div>
+                </div>
+                <div class="col-span-2 p-3 bg-slate-900 rounded-lg flex items-center justify-between">
+                    <div class="flex gap-3 items-center text-white text-[10px]">
+                        <span class="text-sky-400 font-bold uppercase">C. Model:</span>
+                        <label class="flex items-center gap-1 font-black underline decoration-sky-500">Waterfall</label>
+                    </div>
+                    <div class="text-sky-300 text-xs italic">Alasan: Karena kebutuhan aplikasi sudah jelas di awal dan langkah pengerjaan harus urut.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card shadow-md">
+            <h3 class="font-bold text-slate-800 uppercase text-xs mb-3">III. Analisis Tahapan SDLC (Hasil Tebakan)</h3>
+            <table class="w-full text-[10px] border-2 border-slate-900">
+                <thead class="bg-slate-900 text-sky-400 uppercase text-[8px]">
+                    <tr><th class="p-3 border border-slate-700">Aktivitas Praktik</th><th class="p-3 border border-slate-700">Tahapan SDLC</th><th class="p-3 border border-slate-700">Contoh Output</th></tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-slate-50 italic">
+                        <td class="p-3 border font-bold">Briefing tim & penyusunan jadwal.</td>
+                        <td class="p-3 border text-center font-black text-sky-700">PLANNING</td>
+                        <td class="p-3 border text-center font-black text-slate-400">LOGBOOK</td>
+                    </tr>
+                    <tr class="bg-white italic">
+                        <td class="p-3 border font-bold">Riset fitur & data kebutuhan pengguna.</td>
+                        <td class="p-3 border text-center font-black text-sky-700">ANALYSIS</td>
+                        <td class="p-3 border text-center font-black text-slate-400">DAFTAR FITUR</td>
+                    </tr>
+                    <tr class="bg-slate-50 italic">
+                        <td class="p-3 border font-bold">Membuat Flowchart & Mockup UI.</td>
+                        <td class="p-3 border text-center font-black text-sky-700">DESIGN</td>
+                        <td class="p-3 border text-center font-black text-slate-400">BLUEPRINT</td>
+                    </tr>
+                    <tr class="bg-white italic">
+                        <td class="p-3 border font-bold">Coding Python / Blok Kodular.</td>
+                        <td class="p-3 border text-center font-black text-sky-700">DEVELOPMENT</td>
+                        <td class="p-3 border text-center font-black text-slate-400">SOURCE CODE</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

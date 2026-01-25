@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD TP.11.2.1 - MANDIRI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @page { size: A4; margin: 10mm; }
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white !important; padding: 0 !important; } 
+            .card { border: 1.5px solid #020617 !important; box-shadow: none !important; margin-bottom: 8px !important; }
+            #canvas-container { border: 1.5px solid #cbd5e1 !important; height: 450px !important; }
+        }
+        .bg-dark-navy { background-color: #020617; }
+        #canvas-container { 
+            position: relative; height: 430px; 
+            background-color: #f8fafc; 
+            background-image: radial-gradient(#cbd5e1 0.8px, transparent 0.8px); 
+            background-size: 20px 20px;
+            border: 2px dashed #38bdf8; border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .shape { 
+            position: absolute; padding: 8px; min-width: 85px; 
+            border: 2px solid #020617; background: white; cursor: move; 
+            text-align: center; font-size: 9px; font-weight: 800; 
+            box-shadow: 3px 3px 0px #38bdf8; text-transform: uppercase;
+            z-index: 10;
+        }
+        .active-tool { background-color: #0ea5e9 !important; color: white !important; }
+    </style>
+</head>
+<body class="bg-dark-navy p-3 font-sans text-slate-900">
+
+    <div class="max-w-[210mm] mx-auto space-y-3">
+        
+        <header class="bg-slate-900 text-white p-4 rounded-xl flex justify-between items-center shadow-xl border-b-4 border-sky-500">
+            <div>
+                <h1 class="text-xl font-black uppercase italic text-sky-400 leading-none">IV. ANALISIS MANDIRI (SDLC)</h1>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Laporan Individu Pengembangan Produk</p>
+            </div>
+            
+            <div class="no-print flex items-center gap-2">
+                <a href="index.html" class="bg-slate-700 hover:bg-slate-600 text-[9px] px-3 py-2 rounded-lg font-black uppercase text-white transition-all">
+                    ⇠ Kembali ke Kelompok
+                </a>
+                <button onclick="window.print()" class="bg-sky-600 hover:bg-sky-500 text-[9px] px-4 py-2 rounded-lg font-black uppercase text-white shadow-lg transition-all border border-sky-400">
+                    Cetak LKPD TP.11.2.1 Mandiri ⎙
+                </button>
+            </div>
+        </header>
+
+        <section class="bg-white p-4 rounded-xl border-l-8 border-sky-600 card shadow-md">
+            <div class="grid grid-cols-3 gap-6">
+                <div><label class="text-[10px] font-black text-slate-400 uppercase italic">Kelas</label>
+                    <select class="w-full border-b-2 font-bold text-sm outline-none border-slate-200 text-sky-600 py-1">
+                        <option>11-1</option><option>11-2</option><option>11-5</option><option>11-6</option>
+                    </select>
+                </div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase italic">Nama Siswa</label><input type="text" class="w-full border-b-2 font-bold text-sm outline-none border-slate-200 py-1"></div>
+                <div><label class="text-[10px] font-black text-slate-400 uppercase italic">Judul Fitur/Aplikasi</label><input type="text" class="w-full border-b-2 font-bold text-sm outline-none border-slate-200 py-1"></div>
+            </div>
+        </section>
+
+        <section class="bg-white p-4 rounded-xl border-l-8 border-sky-600 card shadow-md">
+            <h3 class="font-black text-sm uppercase mb-3 italic underline decoration-sky-500 decoration-2 underline-offset-4">A. Analisis Kebutuhan (SDLC 1)</h3>
+            <div class="space-y-2 text-[11px]">
+                <div class="flex gap-4 items-center">
+                    <p class="w-56 font-bold text-slate-700 leading-tight">1. Identifikasi Masalah: <br><span class="text-[9px] font-normal text-slate-400 italic">Mengapa aplikasi ini perlu dibuat?</span></p>
+                    <textarea class="flex-1 p-2 bg-slate-50 border rounded h-10 outline-none italic"></textarea>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <p class="w-56 font-bold text-slate-700 leading-tight">2. Kebutuhan Fungsional: <br><span class="text-[9px] font-normal text-slate-400 italic">Apa fitur utama yang dibuat?</span></p>
+                    <textarea class="flex-1 p-2 bg-slate-50 border rounded h-10 outline-none italic"></textarea>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <p class="w-56 font-bold text-slate-700 leading-tight">3. Kebutuhan Non-Fungsional: <br><span class="text-[9px] font-normal text-slate-400 italic">Standar kecepatan/keamanan?</span></p>
+                    <textarea class="flex-1 p-2 bg-slate-50 border rounded h-10 outline-none italic"></textarea>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-4 rounded-xl border-l-8 border-sky-600 card shadow-md">
+            <div class="flex justify-between items-end mb-2">
+                <h3 class="font-black text-sm uppercase italic underline decoration-sky-500 decoration-2 underline-offset-4">B. Perancangan Sistem (SDLC 2)</h3>
+                <p class="text-[9px] text-slate-500 italic font-bold">Gunakan mouse untuk menggambar garis penghubung antar simbol</p>
+            </div>
+            
+            <div class="no-print bg-slate-900 p-2 rounded-lg flex flex-wrap gap-2 justify-center mb-3 shadow-inner">
+                <button onclick="addS('oval')" class="bg-white px-3 py-1 rounded text-[9px] font-black hover:bg-sky-100">START/END</button>
+                <button onclick="addS('rect')" class="bg-white px-3 py-1 rounded text-[9px] font-black hover:bg-sky-100">PROSES</button>
+                <button onclick="addS('rhomb')" class="bg-sky-500 text-white px-4 py-1 text-[9px] font-black" style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);">LOGIKA IF</button>
+                <button onclick="addS('para')" class="bg-white px-3 py-1 rounded text-[9px] font-black" style="transform: skew(-15deg);">I/O DATA</button>
+                <div class="w-px bg-slate-700 mx-2"></div>
+                <button onclick="toggleDraw()" id="pen-btn" class="bg-slate-700 text-white px-4 py-1 rounded text-[9px] font-black border border-slate-500 transition-all">🖊️ GAMBAR GARIS</button>
+                <button onclick="resetAll()" class="bg-red-600 text-white px-4 py-1 rounded text-[9px] font-black uppercase shadow-md active:scale-95 transition-all">Reset Kanvas</button>
+            </div>
+
+            <div id="canvas-container">
+                <canvas id="drawing-canvas"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const container = document.getElementById('canvas-container');
+        const canvas = document.getElementById('drawing-canvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false, canDraw = false;
+
+        function resizeCanvas() {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        window.onload = resizeCanvas;
+
+        function toggleDraw() {
+            canDraw = !canDraw;
+            const btn = document.getElementById('pen-btn');
+            canvas.style.pointerEvents = canDraw ? 'auto' : 'none';
+            btn.classList.toggle('active-tool', canDraw);
+        }
+
+        canvas.addEventListener('mousedown', (e) => { if(!canDraw) return; drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+        canvas.addEventListener('mousemove', (e) => { if(drawing && canDraw) { ctx.lineTo(e.offsetX, e.offsetY); ctx.strokeStyle = '#020617'; ctx.lineWidth = 2; ctx.stroke(); } });
+        canvas.addEventListener('mouseup', () => drawing = false);
+
+        function resetAll() {
+            if(confirm("Apakah Anda yakin ingin menghapus semua elemen dan coretan?")) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                document.querySelectorAll('.shape').forEach(s => s.remove());
+            }
+        }
+
+        function addS(t) {
+            const s = document.createElement('div');
+            s.className = 'shape'; s.contentEditable = true;
+            if (t==='oval') { s.style.borderRadius = "50px"; s.innerText = "START"; }
+            else if (t==='rect') { s.innerText = "PROSES"; }
+            else if (t==='rhomb') { s.style.width="85px"; s.style.height="85px"; s.style.transform="rotate(45deg)"; s.innerHTML="<div style='transform:rotate(-45deg)'>KONDISI?</div>"; }
+            else if (t==='para') { s.style.transform = "skew(-20deg)"; s.innerText = "INPUT DATA"; }
+            
+            s.style.left = "40px"; s.style.top = "40px";
+            let p1=0, p2=0, p3=0, p4=0;
+            s.onmousedown = (e) => {
+                if(canDraw) return;
+                p3=e.clientX; p4=e.clientY;
+                document.onmouseup = () => { document.onmouseup=null; document.onmousemove=null; };
+                document.onmousemove = (e) => {
+                    p1=p3-e.clientX; p2=p4-e.clientY; p3=e.clientX; p4=e.clientY;
+                    s.style.top=(s.offsetTop-p2)+"px"; s.style.left=(s.offsetLeft-p1)+"px";
+                };
+            };
+            container.appendChild(s);
+        }
+    </script>
+</body>
+</html>
