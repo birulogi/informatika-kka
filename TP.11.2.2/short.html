@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kloning UI TikTok 99% Mirip</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* CSS Reset & Dasar */
+        * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+        
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Proxima Nova', sans-serif; /* Font mirip TikTok, jika tidak ada pake sans-serif default */
+            background-color: #000;
+            color: white;
+            -webkit-tap-highlight-color: transparent; /* Hapus highlight tap di mobile */
+        }
+
+        /* Container Utama dengan Scroll Snap */
+        .tiktok-app {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        /* Bagian Setiap Video */
+        .video-feed {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+            background-color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Media Video/Gambar Placeholder */
+        .media-placeholder {
+            min-height: 100%;
+            min-width: 100%;
+            object-fit: cover;
+            position: absolute;
+            z-index: 1;
+        }
+
+        /* Overlay Gelap di bawah untuk teks */
+        .overlay-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+            z-index: 2;
+        }
+
+        /* --- Header Atas (Following | For You) --- */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            font-weight: 600;
+            z-index: 10;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .top-header span {
+            margin: 0 10px;
+            cursor: pointer;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .top-header span.active {
+            color: #fff;
+        }
+
+        .top-header span.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+        
+        .top-header .search-icon {
+            position: absolute;
+            right: 20px;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        /* --- Deskripsi Video (Kiri Bawah) --- */
+        .video-description {
+            position: absolute;
+            bottom: 70px; /* Di atas navbar */
+            left: 15px;
+            width: 75%;
+            z-index: 3;
+            pointer-events: none; /* Biar nembus ke video kalau di-klik */
+        }
+
+        .profile-name {
+            font-weight: 700;
+            font-size: 17px;
+            margin-bottom: 8px;
+            display: block;
+            pointer-events: auto; /* Aktifkan klik kembali */
+            cursor: pointer;
+        }
+
+        .video-caption {
+            font-size: 15px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            color: #eee;
+            pointer-events: auto;
+        }
+
+        .music-info {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #fff;
+            animation: textScroll 10s linear infinite;
+            white-space: nowrap;
+            width: 80%;
+            pointer-events: auto;
+        }
+
+        .music-info i { margin-right: 8px; font-size: 12px; }
+
+        @keyframes textScroll {
+            0% { transform: translateX(10px); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* --- Bilah Aksi Kanan (Sidebar) --- */
+        .action-sidebar {
+            position: absolute;
+            right: 10px;
+            bottom: 85px; /* Sesuaikan agar di atas deskripsi */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 4;
+            gap: 18px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            width: 50px;
+        }
+
+        .action-icon-wrap {
+            font-size: 32px; /* Ukuran ikon TikTok */
+            filter: drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
+            margin-bottom: 2px;
+        }
+
+        .action-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-shadow: 0px 1px 1px rgba(0,0,0,0.5);
+        }
+
+        /* --- Spesifik Profile Circle --- */
+        .profile-circle {
+            position: relative;
+            margin-bottom: 25px; /* Jarak extra untuk tombol follow */
+        }
+
+        .avatar-frame {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid white;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .avatar-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .follow-btn {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 22px;
+            background-color: #fe2c55; /* Warna Merah TikTok */
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 2px solid #fff;
+            cursor: pointer;
+            z-index: 1;
+        }
+        
+        /* Spesifik Ikon Like Merah */
+        .action-btn.liked .action-icon-wrap {
+            color: #fe2c55;
+            animation: likeHeart 0.3s ease-in-out;
+        }
+        
+        @keyframes likeHeart {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- Efek Piringan Hitam Berputar (Kanan Bawah) --- */
+        .music-disc {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #333 0%, #000 50%, #333 100%);
+            border: 10px solid #111;
+            box-shadow: 0 0 10px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            animation: discRotate 5s linear infinite;
+            margin-top: 10px;
+        }
+
+        .music-disc img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        @keyframes discRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- Navbar Bawah Gelap --- */
+        .bottom-navbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background-color: #000;
+            border-top: 1px solid #222;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+            padding: 0 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            width: 20%;
+        }
+
+        .nav-item.active {
+            color: #fff;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Tombol Upload Tengah yang Unik */
+        .upload-btn-wrap {
+            position: relative;
+            width: 45px;
+            height: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 18px;
+        }
+
+        .upload-btn-wrap::before, .upload-btn-wrap::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            z-index: -1;
+        }
+
+        .upload-btn-wrap::before {
+            left: -3px;
+            background-color: #69C9D0; /* Warna Cyan TikTok */
+        }
+
+        .upload-btn-wrap::after {
+            right: -3px;
+            background-color: #EE1D52; /* Warna Merah TikTok */
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="top-header">
+    <span>Following</span>
+    <span class="active">For You</span>
+    <i class="fas fa-search search-icon"></i>
+</div>
+
+<div class="tiktok-app">
+    
+    <div class="video-feed">
+        <img src="https://picsum.photos/seed/tiktok1/360/640" alt="Video Keren" class="media-placeholder">
+        
+        <div class="overlay-bottom"></div>
+
+        <div class="video-description">
+            <div class="profile-name">@p.didik.inspiratif</div>
+            <p class="video-caption">Semangat belajar hari ini! Kreativitas tanpa batas di Birulogi 💪 #pendidikan #kreasi #fyp</p>
+            <div class="music-info">
+                <i class="fas fa-music"></i>
+                <span>Suara asli - Birulogi Musik Peserta Didik - Vol 1</span>
+            </div>
+        </div>
+
+        <div class="action-sidebar">
+            <div class="profile-circle">
+                <div class="avatar-frame">
+                    <img src="https://i.pravatar.cc/150?u=didik1" alt="Avatar">
+                </div>
+                <div class="follow-btn"><i class="fas fa-plus"></i></div>
+            </div>
+
+            <button class="action-btn" onclick="this.classList.toggle('liked')">
+                <div class="action-icon-wrap"><i class="fas fa-heart"></i></div>
+                <span class="action-label">1.5M</span>
+            </button>
+
+            <button class="action-btn">
+                <div class="action-icon-wrap"><i class="fas fa-comment-dots"></i></div>
+                <span class="action-label">12.8K</span>
+            </button>
+
+            <button class="action-btn">
+                <div class="action-icon-wrap"><i class="fas fa-bookmark"></i></div>
+                <span class="action-label">88.2K</span>
+            </button>
+
+            <button class="action-btn">
+                <div class="action-icon-wrap"><i class="fas fa-share"></i></div>
+                <span class="action-label">Bagikan</span>
+            </button>
+
+            <div class="music-disc">
+                <img src="https://i.pravatar.cc/150?u=didik1" alt="Album">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-navbar">
+    <div class="nav-item active">
+        <i class="fas fa-house"></i>
+        <span>Home</span>
+    </div>
+    <div class="nav-item">
+        <i class="fas fa-user-group"></i>
+        <span>Friends</span>
+    </div>
+    <div class="nav-item">
+        <div class="upload-btn-wrap">
+            <i class="fas fa-plus"></i>
+        </div>
+    </div>
+    <div class="nav-item">
+        <i class="fas fa-comment-minus"></i>
+        <span>Inbox</span>
+    </div>
+    <div class="nav-item">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+    </div>
+</div>
+
+</body>
+</html>

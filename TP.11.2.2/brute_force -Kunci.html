@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulasi Brute Force - Tukang Kunci</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
+        
+        /* Pintu */
+        .door-area { font-size: 80px; margin: 20px 0; transition: 0.5s; }
+        .locked { filter: grayscale(1); }
+        .unlocked { filter: grayscale(0); transform: scale(1.1); }
+
+        /* Gantungan Kunci */
+        .key-ring { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; }
+        .key { 
+            width: 60px; height: 60px; background: #eee; border: 2px solid #ddd; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 24px; cursor: pointer; transition: 0.3s; 
+        }
+        .key.active { border-color: #1a73e8; background: #e8f0fe; transform: translateY(-5px); box-shadow: 0 5px 15px rgba(26,115,232,0.3); }
+        .key.wrong { background: #ffebee; border-color: #ef9a9a; color: #ef9a9a; }
+        .key.correct { background: #e8f5e9; border-color: #81c784; color: #2e7d32; }
+
+        .status { font-family: monospace; background: #333; color: #00ff41; padding: 10px; border-radius: 5px; margin-top: 20px; font-size: 14px; }
+        button { background: #1a73e8; color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        button:disabled { background: #ccc; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 style="color: #333;">The Keychain Problem</h2>
+    <p style="color: #666; font-size: 14px;">Klik salah satu kunci untuk menjadikannya <b>Kunci yang Benar</b>, lalu jalankan Brute Force!</p>
+
+    <div id="door" class="door-area locked">🔒</div>
+
+    <div class="key-ring" id="keyRing"></div>
+
+    <button id="startBtn" onclick="startBruteForce()" disabled>COBA SATU PER SATU</button>
+
+    <div class="status" id="log">Status: Menunggu pilihan kunci...</div>
+</div>
+
+<script>
+    const totalKeys = 10;
+    let correctKeyIndex = null;
+    let isRunning = false;
+
+    // Inisialisasi Kunci
+    const keyRing = document.getElementById('keyRing');
+    for (let i = 0; i < totalKeys; i++) {
+        const key = document.createElement('div');
+        key.className = 'key';
+        key.id = 'key-' + i;
+        key.innerHTML = '🔑';
+        key.onclick = () => setCorrectKey(i);
+        keyRing.appendChild(key);
+    }
+
+    function setCorrectKey(index) {
+        if (isRunning) return;
+        correctKeyIndex = index;
+        
+        // Reset Visual
+        document.querySelectorAll('.key').forEach(k => k.classList.remove('active', 'wrong', 'correct'));
+        document.getElementById('door').innerText = '🔒';
+        document.getElementById('door').className = 'door-area locked';
+        
+        document.getElementById('key-' + index).classList.add('active');
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('log').innerText = "Kunci #" + (index + 1) + " disiapkan sebagai kunci asli.";
+    }
+
+    async function startBruteForce() {
+        isRunning = true;
+        document.getElementById('startBtn').disabled = true;
+        
+        // Mulai mencoba dari kunci pertama (Indeks 0)
+        for (let i = 0; i < totalKeys; i++) {
+            const currentKey = document.getElementById('key-' + i);
+            document.getElementById('log').innerText = "Mencoba kunci #" + (i + 1) + "...";
+            
+            // Animasi mencoba
+            currentKey.style.transform = "scale(1.2)";
+            await new Promise(r => setTimeout(r, 600)); 
+            currentKey.style.transform = "scale(1)";
+
+            if (i === correctKeyIndex) {
+                currentKey.classList.add('correct');
+                document.getElementById('door').innerText = '🔓';
+                document.getElementById('door').className = 'door-area unlocked';
+                document.getElementById('log').innerText = "BERHASIL! Pintu terbuka dengan kunci #" + (i + 1);
+                isRunning = false;
+                return;
+            } else {
+                currentKey.classList.add('wrong');
+                document.getElementById('log').innerText = "Kunci #" + (i + 1) + " tidak cocok.";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games Strategi Algoritmik | Brute Force · Greedy · Divide and Conquer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        .header h1 span {
+            color: #ff9800;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Tiga Kolom Utama */
+        .three-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* Card Strategi */
+        .strategy-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .strategy-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            padding: 20px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .card-header.brute {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        .card-header.greedy {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+        .card-header.divide {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .definisi {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff9800;
+        }
+
+        .definisi h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .definisi p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .ciri-ciri {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .ciri-ciri h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .ciri-ciri ul {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        /* Tabel Permainan */
+        .game-section {
+            margin-top: 20px;
+        }
+
+        .game-title {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .game-title .name {
+            font-size: 1.1rem;
+        }
+
+        .game-title .badge-time {
+            background: #ff9800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .game-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .game-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        .game-table td:first-child {
+            font-weight: bold;
+            width: 100px;
+            background: #f5f5f5;
+        }
+
+        .game-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sub-game {
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .sub-game-header {
+            background: #ecf0f1;
+            padding: 12px 15px;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 2px solid #ff9800;
+        }
+
+        /* Sistem Lomba */
+        .sistem-box {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .sistem-box h4 {
+            color: #e67e22;
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: white;
+            padding: 25px;
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .three-columns {
+                grid-template-columns: 1fr;
+            }
+            .game-table td {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-table td:first-child {
+                width: 70px;
+            }
+            .game-title {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Highlight */
+        .highlight {
+            background: #fff8e1;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .note {
+            background: #e3f2fd;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 <span>GAMES STRATEGI ALGORITMIK</span> 🎮</h1>
+            <p>Brute Force · Greedy · Divide and Conquer</p>
+            <p>📋 4 Kelas | 5-6 Kelompok per Kelas | Durasi 10 menit (Tower of Hanoi 5 menit)</p>
+        </div>
+
+        <!-- 3 KOLOM UTAMA -->
+        <div class="three-columns">
+            
+            <!-- KOLOM 1: BRUTE FORCE -->
+            <div class="strategy-card">
+                <div class="card-header brute">
+                    🔓 BRUTE FORCE
+                </div>
+                <div class="card-body">
+                    <div class="definisi">
+                        <h3>📖 Definisi</h3>
+                        <p>Brute force adalah strategi mencoba <strong>semua kemungkinan</strong> satu per satu sampai menemukan solusi yang benar, tanpa menggunakan trik atau pola khusus.</p>
+                    </div>
+                    <div class="ciri-ciri">
+                        <h3>⚡ Ciri-ciri</h3>
+                        <ul>
+                            <li>Sistematis dan berurutan</li>
+                            <li>Tidak butuh pemikiran rumit</li>
+                            <li>Pasti berhasil jika semua kemungkinan dicoba</li>
+                            <li>Kelemahan: butuh waktu lama jika ruang kemungkinan besar</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="game-section">
+                        <h3 style="margin-bottom: 15px; color:#e74c3c;">🎲 Permainan Brute Force</h3>
+                        
+                        <!-- PUZZLE -->
+                        <div class="sub-game">
+                            <div class="sub-game-header">
+                                🧩 PUZZLE
+                            </div>
+                            <table class="game-table">
+                                <tr><td>Cara main</td><td>Puzzle sudah diacak, peserta memasang dengan coba-coba</td></tr>
+                                <tr><td>Strategi brute force</td><td>Coba semua kemungkinan posisi potongan puzzle sampai cocok</td></tr>
+                                <tr><td>Target</td><td>Selesai memasang puzzle paling cepat</td></tr>
+                                <tr><td>Durasi</td><td><span class="highlight">10 menit</span> per babak</td></tr>
+                                <tr><td>Sistem</td><td>Standar (Sesi A → Sesi B → Final)</td></tr>
+                            </table>
+                        </div>
+                        
+                        <!-- KUNCI -->
+                        <div class="sub-game">
+                            <div class="sub-game-header">
+                                🔑 KUNCI (PIN 3 DIGIT)
+                            </div>
+                            <table class="game-table">
+                                <tr><td>Cara main</td><td>Cari PIN rahasia dari <strong>111 sampai 666</strong></td></tr>
+                                <tr><td>Strategi brute force</td><td>Coba berurutan: 111, 112, 113, ... sampai ketemu</td></tr>
+                                <tr><td>Target</td><td>Menemukan PIN yang benar paling cepat</td></tr>
+                                <tr><td>Durasi</td><td><span class="highlight">10 menit</span> per babak</td></tr>
+                                <tr><td>Sistem</td><td>Standar (Sesi A → Sesi B → Final), final pakai PIN baru</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM 2: GREEDY -->
+            <div class="strategy-card">
+                <div class="card-header greedy">
+                    💰 GREEDY
+                </div>
+                <div class="card-body">
+                    <div class="definisi">
+                        <h3>📖 Definisi</h3>
+                        <p>Greedy adalah strategi mengambil <strong>keputusan terbaik saat itu juga</strong> (tanpa memikirkan masa depan) untuk mencapai tujuan secepat mungkin.</p>
+                    </div>
+                    <div class="ciri-ciri">
+                        <h3>⚡ Ciri-ciri</h3>
+                        <ul>
+                            <li>Langsung memilih opsi terbaik yang tersedia saat ini</li>
+                            <li>Tidak memikirkan konsekuensi jangka panjang</li>
+                            <li>Cepat dan sederhana</li>
+                            <li>Belum tentu menghasilkan solusi paling optimal secara global</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="game-section">
+                        <h3 style="margin-bottom: 15px; color:#27ae60;">🎲 Permainan Greedy</h3>
+                        
+                        <!-- KEMBALIAN UANG -->
+                        <div class="sub-game">
+                            <div class="sub-game-header">
+                                💸 KEMBALIAN UANG (KOIN)
+                            </div>
+                            <table class="game-table">
+                                <tr><td>Skenario</td><td>Belanja Rp3.300, bayar Rp5.000 → <strong>kembalian Rp1.700</strong></td></tr>
+                                <tr><td>Cara greedy</td><td>Ambil koin <strong>terbesar</strong> yang nilainya ≤ sisa kembalian</td></tr>
+                                <tr><td>Target</td><td>Mengambil kombinasi koin sesuai greedy paling cepat</td></tr>
+                                <tr><td>Urutan benar</td><td>Rp1.000 → Rp500 → Rp200</td></tr>
+                                <tr><td>Durasi</td><td><span class="highlight">10 menit</span> per babak</td></tr>
+                                <tr><td>Sistem</td><td>Standar (Sesi A → Sesi B → Final)</td></tr>
+                            </table>
+                        </div>
+                        
+                        <!-- LUDO -->
+                        <div class="sub-game">
+                            <div class="sub-game-header">
+                                🎲 LUDO
+                            </div>
+                            <table class="game-table">
+                                <tr><td>Cara greedy</td><td>Ambil langkah paling menguntungkan saat itu</td></tr>
+                                <tr><td>Prioritas</td><td>1. Keluarkan pion (angka 6) | 2. Makan pion lawan | 3. Majukan pion dekat finish | 4. Majukan pion jauh ke belakang</td></tr>
+                                <tr><td>Target</td><td><strong>Pertama kali memakan pion lawan</strong></td></tr>
+                                <tr><td>Durasi</td><td><span class="highlight">10 menit</span> per babak</td></tr>
+                                <tr><td>Sistem</td><td>Standar (Sesi A → Sesi B → Final)</td></tr>
+                            </table>
+                        </div>
+                        
+                        <!-- KARTU 41 -->
+                        <div class="sub-game">
+                            <div class="sub-game-header">
+                                🃏 KARTU 41
+                            </div>
+                            <table class="game-table">
+                                <tr><td>Nilai kartu</td><td>AS=11, K/Q/J/10=10, 9=9, 8=8, 7=7, 6=6, 5=5, 4=4, 3=3, 2=2</td></tr>
+                                <tr><td>Jumlah kartu</td><td><strong>4 kartu</strong> di tangan</td></tr>
+                                <tr><td>Target</td><td>Jumlah keempat kartu = <strong>41</strong></td></tr>
+                                <tr><td>Cara greedy</td><td>Jika < 41 → buang kartu terkecil | Jika > 41 → buang kartu terbesar</td></tr>
+                                <tr><td>Durasi</td><td><span class="highlight">10 menit</span> per babak</td></tr>
+                                <tr><td>Sistem</td><td>Standar (Sesi A → Sesi B → Final)</td></tr>
+                            </table>
+                        </div>
+                        
+                        <!-- CANGKULAN -->
+                        <div class="sub-game">
+                            <div class="sub-game-header">
+                                🃏 CANGKULAN
+                            </div>
+                            <table class="game-table">
+                                <tr><td>Cara main</td><td>Buang kartu yang <strong>sama angka atau sama gambar</strong> dengan kartu teratas tumpukan buang</td></tr>
+                                <tr><td>Cara greedy</td><td>Buang kartu yang memiliki <strong>paling banyak pasangan</strong> di tangan</td></tr>
+                                <tr><td>Target</td><td><strong>Menghabiskan kartu</strong> paling cepat</td></tr>
+                                <tr><td>Durasi</td><td><span class="highlight">10 menit</span> per babak</td></tr>
+                                <tr><td>Sistem</td><td>Standar (Sesi A → Sesi B → Final)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM 3: DIVIDE AND CONQUER -->
+            <div class="strategy-card">
+                <div class="card-header divide">
+                    🔄 DIVIDE AND CONQUER
+                </div>
+                <div class="card-body">
+                    <div class="definisi">
+                        <h3>📖 Definisi</h3>
+                        <p>Divide and Conquer adalah strategi <strong>memecah masalah besar menjadi beberapa bagian kecil</strong>, menyelesaikan setiap bagian kecil secara terpisah, lalu menggabungkan hasilnya.</p>
+                    </div>
+                    <div class="ciri-ciri">
+                        <h3>⚡ Ciri-ciri</h3>
+                        <ul>
+                            <li><strong>Divide</strong> = bagi masalah menjadi sub-masalah kecil</li>
+                            <li><strong>Conquer</strong> = selesaikan setiap sub-masalah (biasanya dengan cara yang sama)</li>
+                            <li><strong>Combine</strong> = gabungkan solusi dari sub-masalah</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="game-section">
+                        <h3 style="margin-bottom: 15px; color:#2980b9;">🎲 Permainan Divide and Conquer</h3>
+                        
+                        <!-- URUT KARTU -->
+                        <div class="sub-game">
+                            <div class="sub-game-header">
+                                🃏 KARTU (MENGURUTKAN)
+                            </div>
+                            <table class="game-table">
+                                <tr><td>Persiapan</td><td>1 set kartu remi (tanpa joker) diacak</td></tr>
+                                <tr><td>Tugas</td><td>Mengurutkan kartu dari <strong>terkecil ke terbesar</strong></td></tr>
+                                <tr><td>Nilai kartu</td><td>AS=1, 2=2, 3=3, ..., 10=10, J=11, Q=12, K=13</td></tr>
+                                <tr><td>Jenis kartu</td><td>Tidak perlu dipisah, urut berdasarkan angka saja</td></tr>
+                                <tr><td>Cara main</td><td>Gunakan strategi Divide and Conquer (bagi, urutkan, gabung)</td></tr>
+                                <tr><td>Target</td><td>Selesai mengurutkan <strong>semua kartu</strong> paling cepat</td></tr>
+                                <tr><td>Durasi</td><td><span class="highlight">10 menit</span> per babak</td></tr>
+                                <tr><td>Sistem</td><td>Standar (Sesi A → Sesi B → Final)</td></tr>
+                            </table>
+                        </div>
+                        
+                        <!-- TOWER OF HANOI -->
+                        <div class="sub-game">
+                            <div class="sub-game-header">
+                                🗼 TOWER OF HANOI
+                            </div>
+                            <table class="game-table">
+                                <tr><td>Alat</td><td>1 set Tower of Hanoi (3 tiang, 3-5 cakram)</td></tr>
+                                <tr><td>Tugas</td><td>Memindahkan <strong>semua cakram</strong> dari tiang kiri ke tiang kanan</td></tr>
+                                <tr><td>Aturan</td><td>Cakram besar <strong>tidak boleh</strong> di atas cakram kecil</td></tr>
+                                <tr><td>Cara main</td><td>Gunakan strategi Divide and Conquer</td></tr>
+                                <tr><td>Target</td><td>Paling cepat (atau paling banyak berhasil) memindahkan semua cakram</td></tr>
+                                <tr><td>Durasi</td><td><span class="highlight">5 menit</span> per kelompok</td></tr>
+                                <tr><td>Sistem</td><td><strong>Bergantian</strong> (karena hanya 1 alat)</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SISTEM LOMBA (di luar 3 kolom) -->
+        <div class="strategy-card" style="background: white; border-radius: 20px; overflow: hidden; margin-top: 10px;">
+            <div class="card-header" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                ⏱️ SISTEM LOMBA
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div class="sistem-box">
+                        <h4>🏆 Standar (Puzzle, Kunci, Kembalian Uang, Ludo, Kartu 41, Cangkulan, Urut Kartu)</h4>
+                        <p>Sesi A (Kelompok 1,2,3) → Juara A<br>
+                        Sesi B (Kelompok 4,5,6) → Juara B<br>
+                        <strong>Final → Juara A vs Juara B</strong></p>
+                        <p>⏱️ Durasi: <strong>10 menit</strong> per babak</p>
+                    </div>
+                    <div class="sistem-box">
+                        <h4>🗼 Khusus Tower of Hanoi</h4>
+                        <p>Sesi A: Kel 1 (5 menit) → Kel 2 (5 menit) → Kel 3 (5 menit) → <strong>Juara A</strong><br>
+                        Sesi B: Kel 4,5,6 (bergantian) → <strong>Juara B</strong><br>
+                        Final: Juara A vs Juara B (masing-masing 5 menit)</p>
+                        <p>⏱️ Durasi: <strong>5 menit</strong> per kelompok</p>
+                    </div>
+                    <div class="sistem-box">
+                        <h4>📋 Jika Tidak Ada yang Selesai</h4>
+                        <p>Pemenang ditentukan dari:<br>
+                        1. Paling banyak kemajuan (jumlah cakram dipindah / puzzle terpasang)<br>
+                        2. Jika sama, waktu tersisa lebih banyak</p>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <strong>📌 Catatan:</strong> 1 kelas dibagi 2 tim besar (A dan B). Masing-masing tim besar main sendiri, lalu pemenang tim diadu di final. <br>
+                    Tower of Hanoi bergantian karena hanya 1 alat.
+                </div>
+            </div>
+        </div>
+
+        <!-- PERBANDINGAN STRATEGI -->
+        <div class="strategy-card" style="background: white; border-radius: 20px; overflow: hidden; margin-top: 20px;">
+            <div class="card-header" style="background: linear-gradient(135deg, #1abc9c, #16a085);">
+                📊 PERBANDINGAN KETIGA STRATEGI
+            </div>
+            <div class="card-body">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #2c3e50; color: white;">
+                            <th style="padding: 12px; text-align: left;">Aspek</th>
+                            <th style="padding: 12px; text-align: left;">Brute Force</th>
+                            <th style="padding: 12px; text-align: left;">Greedy</th>
+                            <th style="padding: 12px; text-align: left;">Divide and Conquer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 10px; font-weight: bold;">Prinsip</td>
+                            <td style="padding: 10px;">Coba semua kemungkinan</td>
+                            <td style="padding: 10px;">Ambil terbaik saat ini</td>
+                            <td style="padding: 10px;">Bagi masalah jadi kecil-kecil</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 10px; font-weight: bold;">Cara kerja</td>
+                            <td style="padding: 10px;">Sistematis, berurutan</td>
+                            <td style="padding: 10px;">Langsung pilih yang terbaik</td>
+                            <td style="padding: 10px;">Pecah → selesaikan → gabung</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="padding: 10px; font-weight: bold;">Kecepatan</td>
+                            <td style="padding: 10px;">Lambat</td>
+                            <td style="padding: 10px;">Cepat</td>
+                            <td style="padding: 10px;">Sedang</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; font-weight: bold;">Contoh game</td>
+                            <td style="padding: 10px;">Puzzle, Kunci PIN</td>
+                            <td style="padding: 10px;">Kembalian uang, Ludo, Kartu 41, Cangkulan</td>
+                            <td style="padding: 10px;">Urut kartu, Tower of Hanoi</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PERSIAPAN PANITIA -->
+        <div class="strategy-card" style="background: white; border-radius: 20px; overflow: hidden; margin-top: 20px;">
+            <div class="card-header" style="background: linear-gradient(135deg, #e67e22, #d35400);">
+                🛠️ YANG PERLU DISIAPKAN PANITIA (PER KELAS)
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div><strong>🧩 Puzzle</strong><br>6 puzzle diacak + cadangan final</div>
+                    <div><strong>🔑 Kunci PIN</strong><br>PIN rahasia 111-666</div>
+                    <div><strong>💰 Kembalian Uang</strong><br>Koin: 1.000(6), 500(2), 200(7), 100(18)</div>
+                    <div><strong>🎲 Ludo</strong><br>Papan + pion + dadu</div>
+                    <div><strong>🃏 Kartu 41</strong><br>1 set kartu remi per meja</div>
+                    <div><strong>🃏 Cangkulan</strong><br>1 set kartu remi per meja</div>
+                    <div><strong>🃏 Urut Kartu</strong><br>1 set kartu remi per kelompok</div>
+                    <div><strong>🗼 Tower of Hanoi</strong><br>1 set (3 tiang, 3-5 cakram) + stopwatch</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            © 2026 Games Strategi Algoritmik | Brute Force · Greedy · Divide and Conquer<br>
+            📍 4 Kelas | 5-6 Kelompok per Kelas
+        </footer>
+    </div>
+</body>
+</html>

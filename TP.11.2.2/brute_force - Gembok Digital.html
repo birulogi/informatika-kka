@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulasi Brute Force - Gembok Digital</title>
+    <style>
+        body { background: #0a0e14; color: #00d4ff; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .box { background: #161b22; padding: 40px; border-radius: 20px; border: 1px solid #30363d; text-align: center; box-shadow: 0 0 50px rgba(0, 212, 255, 0.1); width: 450px; }
+        h2 { margin-bottom: 5px; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
+        p { color: #8b949e; font-size: 0.9em; margin-bottom: 30px; }
+
+        /* Tampilan Angka Gembok */
+        .lock-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .slot { background: #0d1117; width: 60px; height: 80px; border-radius: 10px; border: 2px solid #30363d; font-size: 2.5em; font-weight: bold; display: flex; align-items: center; justify-content: center; color: #58a6ff; transition: all 0.1s; }
+        .slot.trying { border-color: #f1e05a; color: #f1e05a; transform: scale(1.05); }
+        .slot.unlocked { border-color: #2ea043; color: #3fb950; text-shadow: 0 0 15px rgba(63, 185, 80, 0.5); }
+
+        input { background: #0d1117; border: 1px solid #30363d; color: #fff; padding: 12px; width: 150px; text-align: center; border-radius: 8px; font-size: 1.1em; margin-bottom: 20px; outline: none; }
+        input:focus { border-color: #58a6ff; }
+        button { background: #1f6feb; color: #fff; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #388bfd; }
+        button:disabled { background: #30363d; cursor: not-allowed; }
+
+        .log { margin-top: 25px; text-align: left; font-family: 'Courier New', monospace; font-size: 0.85em; color: #8b949e; border-top: 1px solid #30363d; padding-top: 15px; }
+        .highlight { color: #58a6ff; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Vault Cracker</h2>
+    <p>Simulasi Algoritma Brute Force (PIN 3 Digit)</p>
+    
+    <div class="lock-container">
+        <div id="d1" class="slot">0</div>
+        <div id="d2" class="slot">0</div>
+        <div id="d3" class="slot">0</div>
+    </div>
+
+    <input type="number" id="targetPin" placeholder="Set PIN (0-999)" min="0" max="999">
+    <br>
+    <button id="btnStart" onclick="crackVault()">Mulai Dekripsi</button>
+
+    <div class="log">
+        <div>Total Percobaan: <span id="attempts" class="highlight">0</span></div>
+        <div>Kecepatan: <span class="highlight">~25 rps</span></div>
+        <div id="status">Status: Standby</div>
+    </div>
+</div>
+
+<script>
+    let isRunning = false;
+
+    async function crackVault() {
+        if(isRunning) return;
+        
+        const target = document.getElementById('targetPin').value;
+        if(target === "" || target < 0 || target > 999) {
+            alert("Masukkan PIN antara 000 - 999!");
+            return;
+        }
+
+        // Format target ke 3 digit string (misal: "7" jadi "007")
+        const targetStr = target.toString().padStart(3, '0');
+        
+        // Reset UI
+        isRunning = true;
+        document.getElementById('btnStart').disabled = true;
+        document.getElementById('status').innerText = "Status: Cracking...";
+        const slots = [document.getElementById('d1'), document.getElementById('d2'), document.getElementById('d3')];
+        slots.forEach(s => s.classList.remove('unlocked'));
+
+        let attempts = 0;
+
+        // Loop Brute Force 000 - 999
+        for (let i = 0; i <= 999; i++) {
+            attempts++;
+            const currentGuess = i.toString().padStart(3, '0');
+            const digits = currentGuess.split('');
+
+            // Update Visual Angka
+            for (let d = 0; d < 3; d++) {
+                slots[d].innerText = digits[d];
+                slots[d].classList.add('trying');
+            }
+
+            document.getElementById('attempts').innerText = attempts;
+
+            // Beri sedikit delay animasi agar terlihat proses "memutar"
+            // Semakin kecil angkanya, semakin cepat
+            await new Promise(r => setTimeout(r, 40));
+
+            // Jika ketemu
+            if (currentGuess === targetStr) {
+                slots.forEach(s => {
+                    s.classList.remove('trying');
+                    s.classList.add('unlocked');
+                });
+                document.getElementById('status').innerText = "Status: AKSES DITERIMA!";
+                isRunning = false;
+                document.getElementById('btnStart').disabled = false;
+                break;
+            }
+            
+            slots.forEach(s => s.classList.remove('trying'));
+        }
+    }
+</script>
+
+</body>
+</html>

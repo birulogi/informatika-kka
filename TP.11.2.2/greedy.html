@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Greedy - Penjadwalan</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e3f2fd; color: #333; padding: 20px; display: flex; justify-content: center; }
+        .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { color: #0d47a1; text-align: center; margin-bottom: 20px; }
+        .activity-item { background: #f8f9fa; border: 1px solid #dee2e6; padding: 10px; margin-bottom: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .activity-item span { font-weight: bold; color: #1565c0; }
+        .controls { margin-top: 20px; }
+        button { width: 100%; padding: 12px; background-color: #1976d2; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #1565c0; }
+        #log { margin-top: 20px; padding: 15px; border-radius: 6px; background: #fff3e0; border-left: 5px solid #ff9800; display: none; }
+        .selected { border: 2px solid #4caf50 !important; background-color: #e8f5e9 !important; }
+        .rejected { opacity: 0.5; text-decoration: line-through; }
+        .badge { background: #ff9800; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Simulasi Jadwal Greedy</h2>
+    <p style="font-size: 14px; color: #666;">Algoritma akan memilih kegiatan yang <strong>paling cepat selesai</strong> agar bisa mengambil lebih banyak kegiatan.</p>
+    
+    <div id="activityList">
+        </div>
+
+    <div class="controls">
+        <button onclick="runGreedy()">Jalankan Strategi Greedy</button>
+    </div>
+
+    <div id="log">
+        <strong id="summaryTitle">Hasil Pilihan:</strong>
+        <ul id="selectedActivities" style="margin-top: 10px; padding-left: 20px;"></ul>
+    </div>
+</div>
+
+<script>
+    // Data kegiatan (Nama, Jam Mulai, Jam Selesai)
+    const activities = [
+        { id: 1, name: "Rapat Guru", start: 8, end: 11 },
+        { id: 2, name: "Workshop IT", start: 9, end: 10 },
+        { id: 3, name: "Briefing Siswa", start: 10, end: 12 },
+        { id: 4, name: "Kelas Coding", start: 11, end: 13 },
+        { id: 5, name: "Evaluasi", start: 13, end: 14 }
+    ];
+
+    const listDiv = document.getElementById('activityList');
+
+    // Tampilkan daftar awal
+    function displayActivities() {
+        listDiv.innerHTML = "";
+        activities.forEach(act => {
+            const div = document.createElement('div');
+            div.className = 'activity-item';
+            div.id = `act-${act.id}`;
+            div.innerHTML = `
+                <div>
+                    <strong>${act.name}</strong><br>
+                    <small>${act.start}:00 - ${act.end}:00</small>
+                </div>
+                <span class="badge">Selesai jam ${act.end}</span>
+            `;
+            listDiv.appendChild(div);
+        });
+    }
+
+    function runGreedy() {
+        // 1. URUTKAN berdasarkan waktu SELESAI (Strategi Greedy Utama)
+        const sorted = [...activities].sort((a, b) => a.end - b.end);
+        
+        let lastEndTime = 0;
+        let selectedCount = 0;
+        const resultList = document.getElementById('selectedActivities');
+        resultList.innerHTML = "";
+
+        sorted.forEach(act => {
+            const element = document.getElementById(`act-${act.id}`);
+            
+            // 2. CEK apakah jam mulai kegiatan ini >= jam selesai kegiatan sebelumnya
+            if (act.start >= lastEndTime) {
+                element.className = 'activity-item selected';
+                const li = document.createElement('li');
+                li.innerText = act.name;
+                resultList.appendChild(li);
+                
+                lastEndTime = act.end; // Update waktu selesai terakhir
+                selectedCount++;
+            } else {
+                element.className = 'activity-item rejected';
+            }
+        });
+
+        document.getElementById('log').style.display = "block";
+        document.getElementById('summaryTitle').innerText = `Greedy memilih ${selectedCount} kegiatan:`;
+    }
+
+    displayActivities();
+</script>
+
+</body>
+</html>

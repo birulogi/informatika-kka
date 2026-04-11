@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Recursive Game - Edu Version</title>
+    <style>
+        :root { --blue: #1a73e8; --folder: #fbbc04; --bg: #0a0e14; --text: #e8eaed; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; }
+        .wrapper { display: flex; gap: 20px; max-width: 1000px; width: 100%; }
+        
+        /* Panel Game */
+        .game-card { background: #161b22; padding: 25px; border-radius: 20px; border: 2px solid var(--blue); flex: 1; text-align: center; }
+        .screen { background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 15px; margin: 15px 0; min-height: 200px; }
+        
+        /* Panel Penjelasan (Edu-Panel) */
+        .edu-panel { background: #1c2128; border: 1px solid #30363d; border-radius: 20px; width: 350px; padding: 20px; text-align: left; font-size: 0.9em; }
+        .edu-step { background: #21262d; border-left: 4px solid var(--blue); padding: 10px; margin-bottom: 10px; border-radius: 4px; display: none; }
+        
+        .folder-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px; }
+        .folder-unit { cursor: pointer; transition: 0.2s; width: 70px; }
+        .folder-unit:hover { transform: scale(1.1); }
+        .folder-icon { font-size: 40px; color: var(--folder); }
+        
+        .active-step { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        button { background: var(--blue); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .badge { background: #30363d; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; color: var(--blue); }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="game-card">
+        <h3 style="margin:0; color: var(--blue);">📁 DATA RECURSIVE MISSION</h3>
+        <p style="color: #8b949e; font-size: 0.85em;">Cari file: <span style="color:white">Rapor_Final.pdf</span></p>
+
+        <div class="screen" id="display">
+            <div id="path" style="text-align:left; font-family:monospace; margin-bottom:10px; color:var(--blue);">Path: root/</div>
+            <div id="content"></div>
+            <button id="backBtn" onclick="goBack()" style="display:none; background:#30363d;">⬅ Backtracking (Pop)</button>
+        </div>
+
+        <div style="text-align: left; font-size: 0.8em; color: #8b949e;">
+            Kedalaman: <span id="depth" style="color:var(--blue); font-weight:bold;">0</span>
+        </div>
+    </div>
+
+    <div class="edu-panel">
+        <h4 style="margin-top:0; border-bottom: 1px solid #30363d; padding-bottom:10px;">🧠 Logika Rekursi</h4>
+        
+        <div id="step-idle" class="edu-step active-step">
+            <b>Menunggu aksi...</b><br>Pilih salah satu folder untuk memulai proses pemanggilan fungsi rekursif.
+        </div>
+
+        <div id="step-divide" class="edu-step">
+            <span class="badge">DIVIDE</span><br>
+            <b>Fungsi Dipanggil!</b><br>
+            Program memecah masalah besar menjadi pencarian di dalam sub-folder yang lebih spesifik.
+        </div>
+
+        <div id="step-stack" class="edu-step">
+            <span class="badge">STACK PUSH</span><br>
+            <b>Mengingat Posisi...</b><br>
+            Komputer menyimpan folder sebelumnya ke dalam memori (Stack) agar tidak tersesat saat pulang nanti.
+        </div>
+
+        <div id="step-backtrack" class="edu-step">
+            <span class="badge">BACKTRACKING</span><br>
+            <b>Kembali ke Atas...</b><br>
+            Folder kosong! Fungsi selesai dijalankan tanpa hasil, sekarang kembali ke fungsi "pemanggil" sebelumnya (Pop Stack).
+        </div>
+
+        <div id="step-basecase" class="edu-step">
+            <span class="badge">BASE CASE</span><br>
+            <b>Kondisi Berhenti!</b><br>
+            Data ditemukan. Fungsi berhenti memanggil dirinya sendiri dan mengirimkan hasil ke layar utama.
+        </div>
+    </div>
+</div>
+
+<script>
+    const folderTree = {
+        name: "root", type: "folder",
+        children: [
+            { name: "Kurikulum", type: "folder", children: [
+                { name: "Arsip_UAS", type: "folder", children: [{ name: "Rapor_Final.pdf", type: "file" }] },
+                { name: "Jadwal", type: "folder", children: [] }
+            ]},
+            { name: "Kesiswaan", type: "folder", children: [{ name: "Eskul", type: "folder", children: [] }] }
+        ]
+    };
+
+    let pathStack = [folderTree];
+
+    function showEdu(id) {
+        document.querySelectorAll('.edu-step').forEach(s => s.classList.remove('active-step'));
+        document.getElementById(id).classList.add('active-step');
+    }
+
+    function render() {
+        const current = pathStack[pathStack.length - 1];
+        const content = document.getElementById('content');
+        const pathEl = document.getElementById('path');
+        const depthEl = document.getElementById('depth');
+        const backBtn = document.getElementById('backBtn');
+
+        content.innerHTML = '';
+        pathEl.innerText = "Path: " + pathStack.map(f => f.name).join('/');
+        depthEl.innerText = pathStack.length - 1;
+        backBtn.style.display = pathStack.length > 1 ? "inline-block" : "none";
+
+        const grid = document.createElement('div');
+        grid.className = 'folder-grid';
+
+        current.children.forEach(item => {
+            const unit = document.createElement('div');
+            unit.className = 'folder-unit';
+            unit.onclick = () => {
+                if(item.type === 'file') {
+                    if(item.name === "Rapor_Final.pdf") {
+                        showEdu('step-basecase');
+                        document.getElementById('display').innerHTML = "<h2 style='color:#2ea043'>🎉 KETEMU!</h2><p>Base Case Terpenuhi.</p>";
+                    }
+                } else {
+                    pathStack.push(item);
+                    showEdu(Math.random() > 0.5 ? 'step-divide' : 'step-stack');
+                    render();
+                }
+            };
+            unit.innerHTML = `<div class="folder-icon">${item.type==='folder'?'📁':'📄'}</div><div style="font-size:10px">${item.name}</div>`;
+            grid.appendChild(unit);
+        });
+        content.appendChild(grid);
+    }
+
+    function goBack() {
+        pathStack.pop();
+        showEdu('step-backtrack');
+        render();
+    }
+
+    render();
+</script>
+</body>
+</html>

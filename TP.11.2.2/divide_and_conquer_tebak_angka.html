@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulasi Divide & Conquer - Tebak Angka</title>
+    <style>
+        :root { --blue: #1a73e8; --gray: #f1f3f4; --success: #1e8e3e; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; display: flex; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 700px; text-align: center; }
+        
+        /* Visualisasi Bar Angka */
+        .number-line { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 20px 0; padding: 10px; background: var(--gray); border-radius: 10px; }
+        .num-box { width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; background: white; border: 1px solid #ddd; font-size: 12px; border-radius: 4px; transition: 0.3s; color: #666; }
+        
+        /* Status Warna */
+        .eliminated { background: #e0e0e0; color: #bbb; text-decoration: line-through; opacity: 0.5; border-color: #eee; }
+        .current-target { background: var(--blue); color: white; border-color: var(--blue); transform: scale(1.2); z-index: 2; font-weight: bold; }
+        .found { background: var(--success) !important; color: white !important; transform: scale(1.3); box-shadow: 0 0 15px rgba(30,142,62,0.4); }
+
+        .info-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; text-align: left; background: #e8f0fe; padding: 15px; border-radius: 10px; border-left: 5px solid var(--blue); }
+        button { background: var(--blue); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        input { width: 80%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; text-align: center; font-size: 1.1em; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="color: var(--blue); margin-bottom: 5px;">Binary Search Simulation</h2>
+    <p style="color: #666; font-size: 14px;">Strategi: <b>Divide & Conquer</b> (Bagi angka jadi dua terus-menerus)</p>
+
+    <input type="number" id="targetNum" placeholder="Masukkan angka rahasia (1-100)" min="1" max="100">
+    <button id="btnStart" onclick="startBinarySearch()">Mulai Cari (Divide & Conquer)</button>
+
+    <div class="number-line" id="numberLine"></div>
+
+    <div class="info-panel">
+        <div>Langkah ke: <span id="stepCount" style="font-weight:bold;">0</span></div>
+        <div>Rentang: <span id="rangeInfo" style="font-weight:bold;">1 - 100</span></div>
+        <div id="statusMsg" style="grid-column: span 2; font-style: italic; color: var(--blue);">Siap menscan...</div>
+    </div>
+</div>
+
+<script>
+    const numberLine = document.getElementById('numberLine');
+    let numbers = [];
+
+    // Buat 100 kotak angka
+    function initNumbers() {
+        numberLine.innerHTML = '';
+        for (let i = 1; i <= 100; i++) {
+            const div = document.createElement('div');
+            div.className = 'num-box';
+            div.id = 'num-' + i;
+            div.innerText = i;
+            numberLine.appendChild(div);
+        }
+    }
+
+    async function startBinarySearch() {
+        const target = parseInt(document.getElementById('targetNum').value);
+        if (isNaN(target) || target < 1 || target > 100) {
+            alert("Pilih angka antara 1 sampai 100!");
+            return;
+        }
+
+        initNumbers(); // Reset visual
+        document.getElementById('btnStart').disabled = true;
+        
+        let low = 1;
+        let high = 100;
+        let steps = 0;
+
+        while (low <= high) {
+            steps++;
+            document.getElementById('stepCount').innerText = steps;
+            
+            // --- DIVIDE (BAGI) ---
+            let mid = Math.floor((low + high) / 2);
+            document.getElementById('rangeInfo').innerText = low + " s/d " + high;
+            
+            const midEl = document.getElementById('num-' + mid);
+            midEl.classList.add('current-target');
+            document.getElementById('statusMsg').innerText = "Mengecek titik tengah: " + mid;
+
+            await new Promise(r => setTimeout(r, 1000)); // Delay agar siswa bisa melihat
+
+            if (mid === target) {
+                // --- CONQUER (TAKUKKAN) ---
+                midEl.classList.remove('current-target');
+                midEl.classList.add('found');
+                document.getElementById('statusMsg').innerText = "KETEMU! Angka " + target + " ditemukan dalam " + steps + " kali belah.";
+                document.getElementById('btnStart').disabled = false;
+                return;
+            }
+
+            // --- ELIMINASI (BUANG SETENGAHNYA) ---
+            if (mid < target) {
+                document.getElementById('statusMsg').innerText = mid + " terlalu kecil. Buang sisi kiri!";
+                for (let i = low; i <= mid; i++) {
+                    document.getElementById('num-' + i).classList.add('eliminated');
+                }
+                low = mid + 1;
+            } else {
+                document.getElementById('statusMsg').innerText = mid + " terlalu besar. Buang sisi kanan!";
+                for (let i = mid; i <= high; i++) {
+                    document.getElementById('num-' + i).classList.add('eliminated');
+                }
+                high = mid - 1;
+            }
+            
+            midEl.classList.remove('current-target');
+            await new Promise(r => setTimeout(r, 500));
+        }
+    }
+
+    initNumbers();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Reverse Binary Search - Komputer Menebak</title>
+    <style>
+        :root { --blue: #1a73e8; --dark: #202124; --red: #d93025; --green: #1e8e3e; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f1f3f4; display: flex; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 800px; text-align: center; }
+        
+        .grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin: 20px 0; }
+        .num { height: 40px; display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; transition: 0.3s; color: #444; }
+        
+        .active { background: var(--blue); color: white; transform: scale(1.1); font-weight: bold; box-shadow: 0 0 15px var(--blue); z-index: 10; }
+        .eliminated { background: #eeeeee; color: #ccc; text-decoration: line-through; border-color: #ddd; }
+        .success { background: var(--green) !important; color: white !important; animation: celebration 0.5s ease infinite alternate; }
+
+        .control-panel { background: var(--dark); color: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
+        .guess-display { font-size: 48px; font-weight: bold; color: var(--blue); margin: 10px 0; }
+        
+        .btn-group { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        button { padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; min-width: 120px; }
+        .btn-small { background: #f4b400; color: black; }
+        .btn-big { background: #f4b400; color: black; }
+        .btn-correct { background: var(--green); color: white; }
+        .btn-reset { background: var(--blue); color: white; width: 100%; margin-top: 20px; }
+        button:disabled { background: #555; cursor: not-allowed; opacity: 0.5; }
+
+        @keyframes celebration { from { transform: scale(1.1); } to { transform: scale(1.2); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="color: var(--blue);">Detektif Angka (Divide & Conquer)</h2>
+    <p>Pikirkan angka 1-100, lalu biarkan komputer menebaknya!</p>
+
+    <div class="control-panel">
+        <div style="font-size: 14px; color: #aaa;">Tebakan Komputer:</div>
+        <div class="guess-display" id="currentGuess">-</div>
+        <div class="btn-group">
+            <button class="btn-small" id="btnSmall" onclick="handleResponse('smaller')" disabled>Terlalu KECIL</button>
+            <button class="btn-correct" id="btnCorrect" onclick="handleResponse('correct')" disabled>YA, BENAR!</button>
+            <button class="btn-big" id="btnBig" onclick="handleResponse('bigger')" disabled>Terlalu BESAR</button>
+        </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <button class="btn-reset" id="btnStart" onclick="startGame()">MULAI PERMAINAN</button>
+    <p id="msg" style="margin-top: 20px; font-weight: bold; color: #555;">Klik Mulai dan siapkan angka di pikiran Anda.</p>
+</div>
+
+<script>
+    let low, high, currentGuess, steps;
+    const grid = document.getElementById('grid');
+
+    function initGrid() {
+        grid.innerHTML = '';
+        for (let i = 1; i <= 100; i++) {
+            const d = document.createElement('div');
+            d.className = 'num';
+            d.id = 'n-' + i;
+            d.innerText = i;
+            grid.appendChild(d);
+        }
+    }
+
+    function startGame() {
+        low = 1;
+        high = 100;
+        steps = 0;
+        initGrid();
+        
+        document.getElementById('btnStart').disabled = true;
+        document.getElementById('btnSmall').disabled = false;
+        document.getElementById('btnBig').disabled = false;
+        document.getElementById('btnCorrect').disabled = false;
+        
+        makeGuess();
+    }
+
+    function makeGuess() {
+        steps++;
+        currentGuess = Math.floor((low + high) / 2);
+        
+        // Reset visual aktif sebelumnya
+        document.querySelectorAll('.num').forEach(el => el.classList.remove('active'));
+        
+        const el = document.getElementById('n-' + currentGuess);
+        el.classList.add('active');
+        document.getElementById('currentGuess').innerText = currentGuess;
+        document.getElementById('msg').innerText = "Langkah ke-" + steps + ": Apakah angka Anda " + currentGuess + "?";
+    }
+
+    function handleResponse(type) {
+        if (type === 'correct') {
+            document.getElementById('n-' + currentGuess).classList.add('success');
+            document.getElementById('msg').innerText = "Hore! Komputer menang dalam " + steps + " langkah.";
+            endGame();
+            return;
+        }
+
+        if (type === 'smaller') {
+            // Angka asli lebih besar dari tebakan, buang yang kecil
+            for (let i = low; i <= currentGuess; i++) {
+                document.getElementById('n-' + i).classList.add('eliminated');
+            }
+            low = currentGuess + 1;
+        } else {
+            // Angka asli lebih kecil dari tebakan, buang yang besar
+            for (let i = currentGuess; i <= high; i++) {
+                document.getElementById('n-' + i).classList.add('eliminated');
+            }
+            high = currentGuess - 1;
+        }
+
+        if (low > high) {
+            document.getElementById('msg').innerText = "Hmm, sepertinya Anda tidak konsisten menjawabnya...";
+            endGame();
+        } else {
+            makeGuess();
+        }
+    }
+
+    function endGame() {
+        document.getElementById('btnStart').disabled = false;
+        document.getElementById('btnStart').innerText = "MAIN LAGI";
+        document.getElementById('btnSmall').disabled = true;
+        document.getElementById('btnBig').disabled = true;
+        document.getElementById('btnCorrect').disabled = true;
+    }
+
+    initGrid();
+</script>
+
+</body>
+</html>

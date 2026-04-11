@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Brute Force - Data Breaker SMA KP</title>
+    <style>
+        :root { --blue: #00d4ff; --dark: #0a0e14; --red: #ff4b2b; }
+        body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        
+        .game-container { background: #161b22; padding: 30px; border-radius: 20px; border: 2px solid var(--blue); box-shadow: 0 0 30px rgba(0, 212, 255, 0.2); }
+        
+        .grid { display: grid; grid-template-columns: repeat(6, 50px); grid-template-rows: repeat(6, 50px); gap: 8px; margin: 20px 0; }
+        .cell { width: 50px; height: 50px; background: #1c2128; border: 1px solid #30363d; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; cursor: pointer; transition: 0.2s; }
+        .cell:hover { border-color: var(--blue); background: #21262d; }
+        
+        /* Status Warna */
+        .searching { background: rgba(0, 212, 255, 0.2) !important; border-color: var(--blue) !important; box-shadow: inset 0 0 10px var(--blue); }
+        .found { background: #2ea043 !important; border-color: #3fb950 !important; color: white; animation: pulse 1s infinite; }
+        .target-hidden { color: transparent; } /* Sembunyikan target dari mata siswa */
+        
+        .panel { display: flex; justify-content: space-between; width: 100%; font-family: 'Courier New', monospace; color: var(--blue); margin-bottom: 10px; }
+        button { background: var(--blue); color: black; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; width: 100%; }
+        button:hover { background: #00a3c4; }
+        button:disabled { background: #30363d; color: #8b949e; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h2 style="margin:0; text-align:center;">SYSTEM BRUTE FORCE</h2>
+    <p style="color:#8b949e; text-align:center; font-size: 0.9em;">Klik salah satu kotak untuk menyembunyikan "Data Sekolah"</p>
+
+    <div class="panel">
+        <span>Attempts: <span id="att">0</span></span>
+        <span>Status: <span id="status">Ready</span></span>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <button id="startBtn" onclick="runBruteForce()" disabled>JALANKAN BRUTE FORCE</button>
+    <p id="msg" style="font-size: 0.8em; margin-top: 15px; color: #8b949e; text-align:center;"></p>
+</div>
+
+<script>
+    const gridSize = 36; // 6x6
+    let targetIndex = null;
+    let isRunning = false;
+
+    // Buat Grid secara otomatis
+    const gridEl = document.getElementById('grid');
+    for (let i = 0; i < gridSize; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.id = 'cell-' + i;
+        cell.onclick = () => setTarget(i);
+        gridEl.appendChild(cell);
+    }
+
+    function setTarget(index) {
+        if(isRunning) return;
+        
+        // Reset grid sebelumnya
+        document.querySelectorAll('.cell').forEach(c => {
+            c.classList.remove('found');
+            c.innerText = '';
+        });
+
+        targetIndex = index;
+        document.getElementById('cell-' + index).innerText = '💾';
+        document.getElementById('cell-' + index).classList.add('target-hidden'); // Siswa tahu letaknya, tapi algoritma belum
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('msg').innerText = "Data disembunyikan di sektor " + (index + 1) + ". Siap di-crack!";
+    }
+
+    async function runBruteForce() {
+        if(isRunning) return;
+        isRunning = true;
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('status').innerText = "Running...";
+        
+        let attempts = 0;
+
+        // Algoritma Brute Force: Scan Linear (Satu per satu)
+        for (let i = 0; i < gridSize; i++) {
+            attempts++;
+            document.getElementById('att').innerText = attempts;
+            
+            const currentCell = document.getElementById('cell-' + i);
+            currentCell.classList.add('searching');
+            
+            // Delay visual agar terlihat proses scan-nya
+            await new Promise(r => setTimeout(r, 100));
+
+            if (i === targetIndex) {
+                currentCell.classList.remove('searching', 'target-hidden');
+                currentCell.classList.add('found');
+                document.getElementById('status').innerText = "SUCCESS!";
+                document.getElementById('msg').innerText = "DATA DITEMUKAN PADA PERCOBAAN KE-" + attempts;
+                isRunning = false;
+                return;
+            }
+            
+            currentCell.classList.remove('searching');
+        }
+    }
+</script>
+
+</body>
+</html>

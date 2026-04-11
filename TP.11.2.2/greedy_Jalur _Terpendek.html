@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulasi Greedy - PPDB SMA KP Baleendah</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f0f4f8; }
+        .wrapper { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); }
+        /* Warna border disesuaikan dengan biru Google */
+        #map { height: 450px; width: 100%; border-radius: 12px; border: 2px solid #1a73e8; }
+        .leaflet-routing-container { display: none !important; }
+        .stats-container { display: flex; gap: 20px; margin-top: 20px; justify-content: center; }
+        .stat-card { padding: 15px; border-radius: 10px; width: 220px; text-align: center; color: white; }
+        .greedy { background: #1a73e8; } /* Biru Google */
+        .slow { background: #ea4335; }   /* Merah Google */
+        .instruction { background: #fff9c4; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #fbc02d; }
+        .val { font-size: 22px; font-weight: bold; display: block; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <h2 style="text-align:center; color:#0d47a1;">Simulasi Rute ke Sekolah</h2>
+    <div class="instruction">
+        <strong>Edukasi untuk Peserta Didik:</strong><br>
+        Klik peta untuk posisi <b>Rumahmu</b>. Jalur Merah adalah jalur memutar (tidak efisien), sedangkan Jalur Biru adalah hasil <b>Algoritma Greedy</b> (paling efisien).
+    </div>
+
+    <div id="map"></div>
+
+    <div class="stats-container">
+        <div class="stat-card greedy">
+            <strong>Jalur Greedy (Tercepat)</strong>
+            <span id="dist-greedy" class="val">- km</span>
+            <span id="time-greedy">- menit</span>
+        </div>
+        <div class="stat-card slow">
+            <strong>Jalur Lambat (Memutar)</strong>
+            <span id="dist-slow" class="val">- km</span>
+            <span id="time-slow">- menit</span>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+<script>
+    // Koordinat SMA/SMK KP Baleendah
+    const koordinatSekolah = [-7.001829190273273, 107.62302537287539];
+    const map = L.map('map').setView(koordinatSekolah, 16);
+
+    // --- UBAHAN UTAMA: MENGGUNAKAN GOOGLE MAPS TILE LAYER ---
+    // lyrs=m : Roadmap standar Google Maps
+    L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        attribution: '&copy; Google Maps'
+    }).addTo(map);
+
+    const schoolIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        iconSize: [25, 41], iconAnchor: [12, 41]
+    });
+    L.marker(koordinatSekolah, {icon: schoolIcon}).addTo(map).bindPopup("<b>TUJUAN: SMA KP BALEENDAH</b>");
+
+    let markerRumah = L.marker([0,0], {
+        icon: L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+            iconSize: [25, 41], iconAnchor: [12, 41]
+        })
+    });
+
+    const ruteGreedy = L.Routing.control({
+        waypoints: [],
+        lineOptions: { styles: [{ color: '#1a73e8', weight: 6 }] },
+        createMarker: function() { return null; },
+        addWaypoints: false
+    }).addTo(map);
+
+    const ruteSlow = L.Routing.control({
+        waypoints: [],
+        lineOptions: { styles: [{ color: '#ea4335', weight: 4, dashArray: '5, 10', opacity: 0.7 }] },
+        createMarker: function() { return null; },
+        addWaypoints: false
+    }).addTo(map);
+
+    map.on('click', function(e) {
+        const posisiRumah = e.latlng;
+        markerRumah.setLatLng(posisiRumah).addTo(map).bindPopup("Rumah Peserta Didik").openPopup();
+
+        // 1. RUTE GREEDY (Langsung)
+        ruteGreedy.setWaypoints([
+            L.latLng(posisiRumah), 
+            L.latLng(koordinatSekolah)
+        ]);
+
+        // 2. RUTE MEMUTAR (Logika Bapak yang sudah sesuai)
+        let midLat = (posisiRumah.lat + koordinatSekolah[0]) / 2;
+        let midLng = (posisiRumah.lng + koordinatSekolah[1]) / 2;
+        const titikMemutar = L.latLng(midLat + 0.008, midLng - 0.008);
+
+        ruteSlow.setWaypoints([
+            L.latLng(posisiRumah), 
+            titikMemutar, 
+            L.latLng(koordinatSekolah)
+        ]);
+
+        // Statistik
+        ruteGreedy.on('routesfound', function(ev) {
+            const r = ev.routes[0];
+            const d = (r.summary.totalDistance / 1000).toFixed(2);
+            const t = Math.round(r.summary.totalTime / 60);
+            document.getElementById('dist-greedy').innerText = d + " km";
+            document.getElementById('time-greedy').innerText = t + " menit";
+        });
+
+        ruteSlow.on('routesfound', function(ev) {
+            const r = ev.routes[0];
+            const d = (r.summary.totalDistance / 1000).toFixed(2);
+            const t = Math.round(r.summary.totalTime / 60);
+            document.getElementById('dist-slow').innerText = d + " km";
+            document.getElementById('time-slow').innerText = t + " menit";
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulasi Brute Force - Pencarian Data Siswa</title>
+    <style>
+        :root { --primary: #1a73e8; --bg: #f8f9fa; --card: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 20px; color: #333; }
+        .container { max-width: 600px; margin: auto; background: var(--card); padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        
+        .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; outline: none; }
+        input:focus { border-color: var(--primary); }
+        button { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        .list-container { border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
+        .student-item { padding: 12px 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; transition: 0.3s; background: white; }
+        .student-item:last-child { border-bottom: none; }
+        
+        /* Status Visual */
+        .checking { background: #e8f0fe; transform: scale(1.02); border-left: 5px solid var(--primary); font-weight: bold; }
+        .found { background: #ceead6; border-left: 5px solid #1e8e3e; color: #0d652d; font-weight: bold; }
+        .not-found { color: #888; opacity: 0.6; }
+
+        .status-bar { margin-top: 20px; padding: 15px; background: #f1f3f4; border-radius: 8px; font-family: monospace; font-size: 0.9em; }
+        .badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="margin-top:0; color:var(--primary);">Pencarian Data Siswa</h2>
+    <p style="font-size: 0.9em; color: #666;">Algoritma: <b>Linear Search (Brute Force)</b></p>
+    
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Ketik nama siswa (misal: Budi)...">
+        <button onclick="startSearch()">CARI</button>
+    </div>
+
+    <div class="list-container" id="studentList">
+        </div>
+
+    <div class="status-bar">
+        <div>Indeks diperiksa: <span id="currentIndex">-</span></div>
+        <div>Total Perbandingan: <span id="totalSteps">0</span></div>
+        <div id="finalMsg" style="margin-top:5px; font-weight:bold;"></div>
+    </div>
+</div>
+
+<script>
+    const students = [
+        "Aditama", "Budi Santoso", "Citra Lestari", "Deni Setiawan", 
+        "Eka Putri", "Fahmi Idris", "Gita Permata", "Hadi Wijaya", 
+        "Indah Sari", "Joko Susilo", "Kurniawan", "Lani Cahya"
+    ];
+
+    const listEl = document.getElementById('studentList');
+    
+    // Inisialisasi Daftar
+    function initList() {
+        listEl.innerHTML = '';
+        students.forEach((name, index) => {
+            const div = document.createElement('div');
+            div.className = 'student-item';
+            div.id = 'std-' + index;
+            div.innerHTML = `<span>${index + 1}. ${name}</span> <small style="color:#aaa">ID: 100${index}</small>`;
+            listEl.appendChild(div);
+        });
+    }
+
+    async function startSearch() {
+        const target = document.getElementById('searchInput').value.trim().toLowerCase();
+        if (!target) return alert("Masukkan nama yang ingin dicari!");
+
+        // Reset UI
+        initList();
+        document.getElementById('finalMsg').innerText = "";
+        let steps = 0;
+        let found = false;
+
+        // Proses Brute Force (Linear Search)
+        for (let i = 0; i < students.length; i++) {
+            steps++;
+            document.getElementById('currentIndex').innerText = i;
+            document.getElementById('totalSteps').innerText = steps;
+
+            const currentItem = document.getElementById('std-' + i);
+            currentItem.classList.add('checking');
+
+            // Delay visual untuk simulasi proses berpikir komputer
+            await new Promise(r => setTimeout(r, 400));
+
+            if (students[i].toLowerCase().includes(target)) {
+                currentItem.classList.remove('checking');
+                currentItem.classList.add('found');
+                document.getElementById('finalMsg').innerText = "✅ DATA DITEMUKAN!";
+                document.getElementById('finalMsg').style.color = "#1e8e3e";
+                found = true;
+                break; // Berhenti karena sudah ketemu (Greedy Best Case)
+            }
+
+            currentItem.classList.remove('checking');
+            currentItem.classList.add('not-found');
+        }
+
+        if (!found) {
+            document.getElementById('finalMsg').innerText = "❌ DATA TIDAK ADA DALAM DATABASE";
+            document.getElementById('finalMsg').style.color = "#d93025";
+        }
+    }
+
+    initList();
+</script>
+
+</body>
+</html>

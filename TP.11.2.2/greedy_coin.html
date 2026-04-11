@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Greedy - Pecahan Rupiah</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { color: #2e7d32; text-align: center; border-bottom: 2px solid #e8f5e9; padding-bottom: 10px; }
+        .input-group { margin: 20px 0; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #444; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 12px; background-color: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; }
+        button:hover { background-color: #1b5e20; }
+        #result { margin-top: 25px; padding: 15px; border-radius: 8px; background: #f1f8e9; display: none; }
+        .rupiah-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #c8e6c9; }
+        .rupiah-item:last-child { border-bottom: none; }
+        .nominal { font-weight: bold; color: #2e7d32; }
+        .total-info { margin-top: 15px; font-weight: bold; text-align: right; color: #333; border-top: 2px solid #c8e6c9; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Simulasi Kasir Greedy</h2>
+    <div class="input-group">
+        <label>Jumlah Kembalian (Rp):</label>
+        <input type="number" id="amount" placeholder="Contoh: 157500" min="100" step="100">
+    </div>
+    <button onclick="hitungRupiah()">Hitung Pecahan</button>
+
+    <div id="result">
+        <strong>Pecahan yang diberikan:</strong>
+        <div id="rupiahDetails"></div>
+        <p id="totalCount" class="total-info"></p>
+    </div>
+</div>
+
+<script>
+    function hitungRupiah() {
+        let amount = parseInt(document.getElementById('amount').value);
+        
+        if (isNaN(amount) || amount <= 0) {
+            alert("Masukkan jumlah uang yang valid!");
+            return;
+        }
+
+        // Daftar pecahan Rupiah dari terbesar ke terkecil
+        const pecahan = [100000, 50000, 20000, 10000, 5000, 2000, 1000, 500, 200, 100];
+        let hasil = [];
+        let totalLembar = 0;
+
+        // Logika Greedy
+        for (let p of pecahan) {
+            if (amount >= p) {
+                let jumlah = Math.floor(amount / p);
+                amount = amount % p; // Sisa uang setelah diambil pecahan p
+                hasil.push({ nominal: p, jumlah: jumlah });
+                totalLembar += jumlah;
+            }
+        }
+
+        // Tampilkan ke UI
+        const resultDiv = document.getElementById('result');
+        const detailsDiv = document.getElementById('rupiahDetails');
+        const totalText = document.getElementById('totalCount');
+        
+        detailsDiv.innerHTML = "";
+        hasil.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'rupiah-item';
+            row.innerHTML = `
+                <span>Rp ${item.nominal.toLocaleString('id-ID')}</span>
+                <span class="nominal">x ${item.jumlah}</span>
+            `;
+            detailsDiv.appendChild(row);
+        });
+
+        totalText.innerHTML = `Total: ${totalLembar} Lembar/Koin`;
+        resultDiv.style.display = "block";
+    }
+</script>
+
+</body>
+</html>

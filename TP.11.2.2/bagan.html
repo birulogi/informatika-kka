@@ -1,0 +1,243 @@
+<!-- BAGAN MATERI ALGORITMIK -->
+<div class="strategy-card" style="background: white; border-radius: 20px; overflow: hidden; margin-top: 20px;">
+    <div class="card-header" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
+        📊 BAGAN STRATEGI ALGORITMIK
+    </div>
+    <div class="card-body">
+        
+        <!-- ==================== BAGAN BRUTE FORCE ==================== -->
+        <h3 style="color: #e74c3c; margin: 20px 0 15px 0; border-left: 5px solid #e74c3c; padding-left: 15px;">🔓 A. BRUTE FORCE</h3>
+        <div style="background: #fef2f2; padding: 20px; border-radius: 16px; margin-bottom: 30px; overflow-x: auto;">
+            <pre style="font-family: monospace; font-size: 14px; line-height: 1.6; color: #333;">
+                    ┌─────────────────────────────────────────────────────────┐
+                    │                   BRUTE FORCE                         │
+                    │         Mencoba SEMUA kemungkinan satu per satu        │
+                    └─────────────────────────────────────────────────────────┘
+                                              │
+                    ┌─────────────────────────┼─────────────────────────┐
+                    │                         │                         │
+                    ▼                         ▼                         ▼
+            ┌───────────────┐         ┌───────────────┐         ┌───────────────┐
+            │    PUZZLE     │         │  KUNCI PIN    │         │    CONTOH     │
+            │               │         │               │         │   LAINNYA     │
+            ├───────────────┤         ├───────────────┤         ├───────────────┤
+            │Coba pasang    │         │Coba 111,112,  │         │Coba semua     │
+            │semua potongan │         │113... sampai  │         │kunci di       │
+            │puzzle sampai  │         │ketemu PIN     │         │gantungan      │
+            │cocok          │         │rahasia        │         │               │
+            └───────────────┘         └───────────────┘         └───────────────┘
+                    
+            ⚡ Ciri: Sistematis | Pasti berhasil | Lambat jika ruang besar
+            </pre>
+        </div>
+
+        <!-- ==================== BAGAN GREEDY ==================== -->
+        <h3 style="color: #27ae60; margin: 20px 0 15px 0; border-left: 5px solid #27ae60; padding-left: 15px;">💰 B. GREEDY</h3>
+        <div style="background: #f0fff4; padding: 20px; border-radius: 16px; margin-bottom: 30px; overflow-x: auto;">
+            <pre style="font-family: monospace; font-size: 14px; line-height: 1.6; color: #333;">
+                    ┌─────────────────────────────────────────────────────────┐
+                    │                      GREEDY                            │
+                    │     Ambil KEPUTUSAN TERBAIK saat itu juga              │
+                    └─────────────────────────────────────────────────────────┘
+                                              │
+                    ┌─────────────┬───────────┼───────────┬─────────────────┐
+                    │             │           │           │                 │
+                    ▼             ▼           ▼           ▼                 ▼
+            ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐ ┌───────────┐
+            │KEMBALIAN  │ │   LUDO    │ │ KARTU 41  │ │ CANGKULAN │ │  CONTOH   │
+            │  UANG     │ │           │ │           │ │           │ │  LAINNYA  │
+            ├───────────┤ ├───────────┤ ├───────────┤ ├───────────┤ ├───────────┤
+            │Ambil koin │ │Prioritas: │ │Jika<41    │ │Buang kartu│ │Pilih      │
+            │TERBESAR   │ │1.Keluarkan│ │buang      │ │dengan     │ │antrian    │
+            │dulu       │ │2.Makan    │ │TERKECIL   │ │pasangan   │ │terpendek  │
+            │1.000+500  │ │pion       │ │Jika>41    │ │TERBANYAK  │ │           │
+            │+200=1.700 │ │3.Maju ke  │ │buang      │ │           │ │           │
+            │           │ │finish     │ │TERBESAR   │ │           │ │           │
+            └───────────┘ └───────────┘ └───────────┘ └───────────┘ └───────────┘
+                    
+            ⚡ Ciri: Cepat | Sederhana | Belum tentu optimal global
+            </pre>
+        </div>
+
+        <!-- ==================== BAGAN DIVIDE AND CONQUER ==================== -->
+        <h3 style="color: #3498db; margin: 20px 0 15px 0; border-left: 5px solid #3498db; padding-left: 15px;">🔄 C. DIVIDE AND CONQUER</h3>
+        <div style="background: #e8f4f8; padding: 20px; border-radius: 16px; margin-bottom: 30px; overflow-x: auto;">
+            <pre style="font-family: monospace; font-size: 14px; line-height: 1.6; color: #333;">
+                    ┌─────────────────────────────────────────────────────────────────────┐
+                    │                      DIVIDE AND CONQUER                             │
+                    │        BAGI masalah besar → SELESAIKAN bagian kecil → GABUNGKAN     │
+                    └─────────────────────────────────────────────────────────────────────┘
+                                              │
+                    ┌─────────────────────────┼─────────────────────────┐
+                    │                         │                         │
+                    ▼                         ▼                         ▼
+            ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+            │    DIVIDE       │       │    CONQUER      │       │    COMBINE      │
+            │    (Bagi)       │ ────▶ │   (Selesaikan)  │ ────▶ │   (Gabung)      │
+            ├─────────────────┤       ├─────────────────┤       ├─────────────────┤
+            │Pecah masalah    │       │Urutkan masing2  │       │Gabungkan 2      │
+            │menjadi sub-     │       │bagian secara    │       │bagian yang      │
+            │masalah kecil    │       │terpisah         │       │sudah terurut    │
+            └─────────────────┘       └─────────────────┘       └─────────────────┘
+                                              │
+                    ┌─────────────────────────┼─────────────────────────┐
+                    │                         │                         │
+                    ▼                         ▼                         ▼
+            ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+            │   URUT KARTU    │       │TOWER OF HANOI   │       │    CONTOH       │
+            │                 │       │                 │       │   LAINNYA       │
+            ├─────────────────┤       ├─────────────────┤       ├─────────────────┤
+            │Bagi tumpukan    │       │Pindahkan N-1    │       │Merge Sort      │
+            │kartu jadi 2     │       │cakram ke tiang  │       │Quick Sort      │
+            │Urutkan masing2  │       │bantu → pindah-  │       │Binary Search   │
+            │Gabungkan hasil  │       │kan terbesar →   │       │                 │
+            │urutan           │       │pindahkan N-1    │       │                 │
+            │                 │       │ke tiang tujuan  │       │                 │
+            └─────────────────┘       └─────────────────┘       └─────────────────┘
+                    
+            ⚡ Ciri: Divide → Conquer → Combine | Pasti berhasil | Efisien untuk masalah besar
+            </pre>
+        </div>
+
+        <!-- ==================== FLOWCHAT SISTEM LOMBA ==================== -->
+        <h3 style="color: #9b59b6; margin: 20px 0 15px 0; border-left: 5px solid #9b59b6; padding-left: 15px;">🏆 FLOWCHAT SISTEM LOMBA (STANDAR)</h3>
+        <div style="background: #f5f0ff; padding: 20px; border-radius: 16px; overflow-x: auto;">
+            <pre style="font-family: monospace; font-size: 14px; line-height: 1.6; color: #333;">
+                                    ┌─────────────────────────┐
+                                    │     1 KELAS (6 KELOMPOK) │
+                                    └─────────────┬───────────┘
+                                                  │
+                            ┌─────────────────────┼─────────────────────┐
+                            │                     │                     │
+                            ▼                     │                     ▼
+                    ┌───────────────┐             │             ┌───────────────┐
+                    │    SESI A     │             │             │    SESI B     │
+                    │ (Kel 1,2,3)   │             │             │ (Kel 4,5,6)   │
+                    └───────┬───────┘             │             └───────┬───────┘
+                            │                     │                     │
+                            ▼                     │                     ▼
+                    ┌───────────────┐             │             ┌───────────────┐
+                    │ Masing2 main  │             │             │ Masing2 main  │
+                    │ siapa tercepat│             │             │ siapa tercepat│
+                    │ = JUARA A     │             │             │ = JUARA B     │
+                    └───────┬───────┘             │             └───────┬───────┘
+                            │                     │                     │
+                            └─────────────────────┼─────────────────────┘
+                                                  │
+                                                  ▼
+                                    ┌─────────────────────────┐
+                                    │         FINAL           │
+                                    │   JUARA A vs JUARA B     │
+                                    └─────────────┬───────────┘
+                                                  │
+                                                  ▼
+                                    ┌─────────────────────────┐
+                                    │  TERCEPAT = JUARA KELAS  │
+                                    └─────────────────────────┘
+            </pre>
+        </div>
+
+        <!-- ==================== FLOWCHAT TOWER OF HANOI (BERGANTIAN) ==================== -->
+        <h3 style="color: #e67e22; margin: 20px 0 15px 0; border-left: 5px solid #e67e22; padding-left: 15px;">🗼 FLOWCHAT TOWER OF HANOI (KARENA 1 ALAT)</h3>
+        <div style="background: #fff3e0; padding: 20px; border-radius: 16px; overflow-x: auto;">
+            <pre style="font-family: monospace; font-size: 14px; line-height: 1.6; color: #333;">
+                    SESI A (Kelompok 1,2,3)                    SESI B (Kelompok 4,5,6)
+                          │                                          │
+                          ▼                                          ▼
+                    ┌───────────┐                              ┌───────────┐
+                    │ Kel 1     │                              │ Kel 4     │
+                    │ main 5'   │                              │ main 5'   │
+                    └─────┬─────┘                              └─────┬─────┘
+                          ▼                                          ▼
+                    ┌───────────┐                              ┌───────────┐
+                    │ Kel 2     │                              │ Kel 5     │
+                    │ main 5'   │                              │ main 5'   │
+                    └─────┬─────┘                              └─────┬─────┘
+                          ▼                                          ▼
+                    ┌───────────┐                              ┌───────────┐
+                    │ Kel 3     │                              │ Kel 6     │
+                    │ main 5'   │                              │ main 5'   │
+                    └─────┬─────┘                              └─────┬─────┘
+                          │                                          │
+                          ▼                                          ▼
+                    ┌───────────┐                              ┌───────────┐
+                    │ JUARA A   │                              │ JUARA B   │
+                    │(tercepat/ │                              │(tercepat/ │
+                    │terbanyak) │                              │terbanyak) │
+                    └─────┬─────┘                              └─────┬─────┘
+                          │                                          │
+                          └──────────────────┬───────────────────────┘
+                                             ▼
+                                    ┌───────────────┐
+                                    │    FINAL      │
+                                    │Juara A vs B   │
+                                    │masing2 5 menit│
+                                    └───────┬───────┘
+                                            ▼
+                                    ┌───────────────┐
+                                    │ JUARA KELAS   │
+                                    └───────────────┘
+            </pre>
+        </div>
+
+        <!-- ==================== BAGAN PERBANDINGAN ==================== -->
+        <h3 style="color: #1abc9c; margin: 20px 0 15px 0; border-left: 5px solid #1abc9c; padding-left: 15px;">📈 BAGAN PERBANDINGAN KECEPATAN & KEPASTIAN</h3>
+        <div style="background: #f0fdfa; padding: 20px; border-radius: 16px; overflow-x: auto;">
+            <pre style="font-family: monospace; font-size: 14px; line-height: 1.6; color: #333;">
+                    KECEPATAN:
+                    
+                    GREEDY              ████████████████████ (Paling Cepat)
+                    DIVIDE & CONQUER    ██████████████░░░░░ (Sedang)
+                    BRUTE FORCE         ████░░░░░░░░░░░░░░░ (Lambat)
+                    
+                    
+                    KEPASTIAN BERHASIL:
+                    
+                    BRUTE FORCE         ████████████████████ (Pasti, jika waktu cukup)
+                    DIVIDE & CONQUER    ████████████████████ (Pasti)
+                    GREEDY              ████████████░░░░░░░ (Belum tentu optimal global)
+                    
+                    
+                    KEMUDAHAN IMPLEMENTASI:
+                    
+                    GREEDY              ████████████████████ (Paling Mudah)
+                    BRUTE FORCE         ████████████████░░░ (Mudah)
+                    DIVIDE & CONQUER    ████████████░░░░░░░ (Butuh latihan)
+            </pre>
+        </div>
+
+        <!-- ==================== BAGAN STRUKTUR GAME ==================== -->
+        <h3 style="color: #e74c3c; margin: 20px 0 15px 0; border-left: 5px solid #e74c3c; padding-left: 15px;">🎮 STRUKTUR PERMAINAN</h3>
+        <div style="background: #fef9e6; padding: 20px; border-radius: 16px; overflow-x: auto;">
+            <pre style="font-family: monospace; font-size: 14px; line-height: 1.6; color: #333;">
+                                 ┌─────────────────────────┐
+                                 │   GAMES STRATEGI ALGORITMIK │
+                                 └─────────────┬───────────┘
+                                               │
+            ┌────────────────┬────────────────┼────────────────┬────────────────┐
+            │                │                │                │                │
+            ▼                ▼                ▼                ▼                ▼
+        ┌───────┐      ┌───────┐        ┌───────┐        ┌───────┐        ┌───────┐
+        │BRUTE  │      │GREEDY │        │GREEDY │        │GREEDY │        │D&C    │
+        │FORCE  │      │       │        │       │        │       │        │       │
+        └───┬───┘      └───┬───┘        └───┬───┘        └───┬───┘        └───┬───┘
+            │              │                │                │                │
+            ▼              ▼                ▼                ▼                ▼
+        ┌───────┐      ┌───────┐        ┌───────┐        ┌───────┐        ┌───────┐
+        │Puzzle │      │Kembali│        │ Ludo  │        │Kartu  │        │Urut   │
+        │       │      │ an    │        │       │        │ 41    │        │Kartu  │
+        │Kunci  │      │ Uang  │        │       │        │Cangku-│        │Tower  │
+        │PIN    │      │(koin) │        │       │        │lan    │        │of Hanoi│
+        └───────┘      └───────┘        └───────┘        └───────┘        └───────┘
+            │              │                │                │                │
+            └──────────────┴────────────────┴────────────────┴────────────────┘
+                                               │
+                                               ▼
+                                    ┌─────────────────────────┐
+                                    │    SISTEM LOMBA          │
+                                    │ Sesi A → Sesi B → Final  │
+                                    └─────────────────────────┘
+            </pre>
+        </div>
+    </div>
+</div>

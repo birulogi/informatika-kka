@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Simulasi Brute Force Visual | Animasi Pengecekan</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f0a, #030603);
+            color: #00ffc3;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            border: 2px solid #00ffaa;
+            background: rgba(0, 20, 5, 0.65);
+            backdrop-filter: blur(2px);
+            padding: 25px 20px 30px;
+            border-radius: 28px;
+            box-shadow: 0 0 25px rgba(0, 255, 170, 0.3), inset 0 0 8px rgba(0, 255, 170, 0.2);
+            text-align: center;
+            width: 480px;
+            max-width: 94%;
+            transition: all 0.2s;
+        }
+
+        h2 {
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 0;
+            font-size: 1.6rem;
+            text-shadow: 0 0 6px #00ffaa;
+            border-bottom: 1px dashed #00ffaa;
+            display: inline-block;
+            padding-bottom: 6px;
+        }
+
+        .sub {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-bottom: 18px;
+        }
+
+        input {
+            background: #0a1a0a;
+            border: 1.5px solid #00ffaa;
+            color: #b3ffda;
+            padding: 12px;
+            width: 85%;
+            margin-bottom: 22px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-family: monospace;
+            font-weight: bold;
+            border-radius: 40px;
+            outline: none;
+            transition: 0.2s;
+            letter-spacing: 1px;
+        }
+
+        input:focus {
+            border-color: #fffa9e;
+            box-shadow: 0 0 12px #fffa9e;
+            color: #fff5b0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00cc77, #00995a);
+            color: #010d05;
+            border: none;
+            padding: 10px 26px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-family: monospace;
+            font-size: 1.1rem;
+            border-radius: 60px;
+            letter-spacing: 1px;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 200, 100, 0.4);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #00ff99, #00bb66);
+            transform: scale(1.02);
+            box-shadow: 0 0 15px #00ffaa;
+            color: black;
+        }
+
+        /* ANIMASI PENGECEKAN UTAMA */
+        #display-area {
+            margin: 20px auto 15px;
+            font-size: 2.8rem;
+            letter-spacing: 8px;
+            height: 80px;
+            font-weight: bold;
+            background: #031005;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            transition: all 0.1s ease;
+            border: 1px solid #2aff9e;
+            box-shadow: inset 0 0 8px #0f3;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* efek scanning / pengecekan */
+        .scan-effect {
+            animation: scanLine 0.28s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        }
+
+        @keyframes scanLine {
+            0% {
+                text-shadow: 0 0 0px #0f0;
+                background: radial-gradient(circle at 30% 50%, #1a3a1a, #031005);
+                letter-spacing: 8px;
+            }
+            50% {
+                text-shadow: 0 0 12px #b3ffb0, 0 0 5px #5eff00;
+                background: #102f12;
+                letter-spacing: 10px;
+            }
+            100% {
+                text-shadow: 0 0 2px #0f0;
+                background: #031005;
+                letter-spacing: 8px;
+            }
+        }
+
+        /* efek kedip saat berhasil */
+        .found {
+            animation: successFlash 0.5s ease 3, glowPulse 1s infinite;
+            color: #ffffff;
+            text-shadow: 0 0 10px #aaffaa, 0 0 20px #00ff88;
+            border-color: #ffff80;
+        }
+
+        @keyframes successFlash {
+            0% { background-color: #1a4a1a; border-color: #ffff66; transform: scale(1);}
+            50% { background-color: #b3ff66; color: #000; border-color: #ffffaa; transform: scale(1.01);}
+            100% { background-color: #031005; border-color: #00ffaa;}
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 0px #00ff88;}
+            100% { box-shadow: 0 0 18px #22ff88;}
+        }
+
+        /* animasi bar pengecekan (loading visual) */
+        .check-animation {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 6px 0 8px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: #00ffaa;
+            border-radius: 50%;
+            opacity: 0.3;
+            transition: 0.1s;
+        }
+        .dot.active {
+            opacity: 1;
+            background-color: #fbff8f;
+            box-shadow: 0 0 8px #fbff8f;
+            transform: scale(1.2);
+        }
+        .blink-text {
+            font-size: 0.8rem;
+            color: #b3ffc4;
+            animation: fadeBlink 1s infinite;
+        }
+        @keyframes fadeBlink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; text-shadow: 0 0 4px #0f0;}
+        }
+
+        .stats {
+            margin-top: 22px;
+            font-size: 1rem;
+            background: #071007b3;
+            padding: 12px 16px;
+            border-radius: 20px;
+            text-align: left;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 12px;
+            border-left: 4px solid #00ffaa;
+        }
+        .stats div span {
+            color: #f5ffb0;
+            font-weight: bold;
+            background: #00000055;
+            padding: 2px 6px;
+            border-radius: 18px;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 12px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 480px) {
+            #display-area { font-size: 1.8rem; letter-spacing: 4px; height: 70px;}
+            .stats { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>⚡ BRUTE FORCE ⚡</h2>
+    <div class="sub">[ visual cracking engine ]</div>
+    <input type="text" id="targetInput" maxlength="4" placeholder="Target (max 4) • contoh: x9" autocomplete="off">
+    <br>
+    <button onclick="startBruteForce()">🔓 MULAI CRACK</button>
+
+    <!-- area animasi pengecekan dinamis -->
+    <div id="checkAnimIndicator" class="check-animation">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+
+    <div id="display-area">____</div>
+
+    <div class="stats">
+        <div>🔍 Status: <span id="status">Idle</span></div>
+        <div>🔁 Percobaan: <span id="attempts">0</span></div>
+        <div>⏱️ Waktu: <span id="timer">0.00</span> detik</div>
+        <div>🎯 Target: <span id="showTarget">-</span></div>
+    </div>
+    <div class="badge">[ animasi scanning & pengecekan aktif ]</div>
+</div>
+
+<script>
+    (function(){
+        // Kumpulan karakter: huruf kecil + angka -> lebih realistis
+        const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        let attempts = 0;
+        let startTime = 0;
+        let isRunning = false;
+        let stopFlag = false;     // untuk menghentikan proses jika selesai
+        let currentGenerator = null; // hanya untuk menjaga state (tapi pakai flag)
+        
+        // Elemen DOM
+        const targetInput = document.getElementById('targetInput');
+        const displayArea = document.getElementById('display-area');
+        const statusSpan = document.getElementById('status');
+        const attemptsSpan = document.getElementById('attempts');
+        const timerSpan = document.getElementById('timer');
+        const showTargetSpan = document.getElementById('showTarget');
+        const checkDots = document.querySelectorAll('.dot');
+        
+        // --- Fungsi animasi pengecekan (scan + bouncing dots) ---
+        // Efek visual setiap kali melakukan pengecekan (setiap percobaan)
+        function animateCheck(guessText) {
+            // 1. Efek scan pada display area (kilatan garis)
+            if(displayArea) {
+                displayArea.classList.remove('scan-effect');
+                // force reflow
+                void displayArea.offsetWidth;
+                displayArea.classList.add('scan-effect');
+                // hilangin class setelah animasi selesai supaya bisa diulang
+                setTimeout(() => {
+                    if(displayArea) displayArea.classList.remove('scan-effect');
+                }, 280);
+            }
+            
+            // 2. Animasi titik-titik (dot) bergerak seperti progress pengecekan
+            //    Semua dot aktif bergantian? tapi kita buat efek ripple/cek kilat
+            //    Membuat efek seperti 'pemeriksaan data'
+            for(let i=0; i<checkDots.length; i++) {
+                checkDots[i].classList.remove('active');
+            }
+            // aktifkan semua dot secara bergantian dengan sedikit jeda untuk efek "checking wave"
+            const activeCount = Math.min(5, Math.floor(Math.random() * 3) + 2); // 2-4 dot aktif
+            for(let i=0; i<activeCount; i++) {
+                if(checkDots[i]) {
+                    setTimeout(() => {
+                        if(checkDots[i]) checkDots[i].classList.add('active');
+                    }, i * 25);
+                }
+            }
+            // reset semua dot setelah 200ms (tapi agar tidak mengganggu, jangan terlalu lama)
+            setTimeout(() => {
+                for(let i=0; i<checkDots.length; i++) {
+                    if(checkDots[i]) checkDots[i].classList.remove('active');
+                }
+                // kadang kasih efek jeda kecil
+            }, 220);
+            
+            // 3. Efek tambahan: teks berkedip tipis di status? (optional)
+            //    Tapi biar ringkas, sudah cukup.
+        }
+        
+        // fungsi update UI utama dengan animasi pengecekan otomatis
+        function updateUIWithAnimation(guess) {
+            // update teks di display
+            if(displayArea) {
+                displayArea.innerText = guess.padEnd(4, '_'); // agar rapi, tetap tunjukkan panjang maks 4
+            }
+            // update total attempts & timer
+            attemptsSpan.innerText = attempts.toLocaleString();
+            if(startTime > 0) {
+                const elapsed = (Date.now() - startTime) / 1000;
+                timerSpan.innerText = elapsed.toFixed(2);
+            }
+            
+            // 🔥 PENTING: SETIAP PERCOBAAN = ANIMASI PENGECEKAN (scan + dot wave)
+            animateCheck(guess);
+        }
+        
+        // versi khusus untuk final (success) tanpa mengganggu animasi sukses
+        function finalSuccessAnimation(guess) {
+            if(displayArea) {
+                displayArea.innerText = guess;
+                displayArea.classList.add('found');
+            }
+            // Reset dot jadi semuanya menyala terang sebagai tanda victory
+            for(let i=0; i<checkDots.length; i++) {
+                checkDots[i].style.backgroundColor = "#ffff80";
+                checkDots[i].style.boxShadow = "0 0 12px gold";
+                checkDots[i].classList.add('active');
+            }
+            statusSpan.innerText = "✓ SUKSES!";
+        }
+        
+        // Fungsi rekursif brute force dengan animasi pengecekan per attempt.
+        // Menggunakan generator async agar bisa memberi jeda dan tetap responsif terhadap stop
+        // Karena rekursif dalam, kita pakai loop manual dengan stack simulasi? lebih aman pakai async/await + loop.
+        // Solusi: fungsi pembangkit kombinasi dengan loop depth-first bertahap.
+        
+        // Fungsi bruteForceAsync akan menjalankan semua kemungkinan hingga length maks tertentu.
+        // Mengembalikan Promise<boolean> true jika ketemu.
+        async function tryAllCombinations(maxLength, target) {
+            // fungsi rekursif berbasis async dengan yield / await pengecekan animasi
+            async function dfs(prefix, lengthLimit) {
+                if(stopFlag) return false;
+                if(prefix.length === lengthLimit) {
+                    attempts++;
+                    // update UI + animasi pengecekan setiap attempt!
+                    updateUIWithAnimation(prefix);
+                    
+                    // sedikit jeda hanya untuk kehalusan animasi & agar user bisa melihat deret teks
+                    // Tapi jangan terlalu lambat karena ribuan attempt, kasih delay sangat kecil (1ms setiap 15 percobaan)
+                    // Supaya tetap terlihat smooth di high speed.
+                    if(attempts % 12 === 0) {
+                        await new Promise(r => setTimeout(r, 0)); // beri kesempatan repaint
+                    }
+                    
+                    if(prefix === target) {
+                        return true;
+                    }
+                    return false;
+                }
+                
+                for(let i = 0; i < chars.length; i++) {
+                    if(stopFlag) return false;
+                    const next = prefix + chars[i];
+                    const found = await dfs(next, lengthLimit);
+                    if(found) return true;
+                }
+                return false;
+            }
+            
+            // coba dari panjang 1 hingga maxLength
+            for(let curLen = 1; curLen <= maxLength; curLen++) {
+                if(stopFlag) return false;
+                const found = await dfs("", curLen);
+                if(found) return true;
+                // jika sudah mencapai panjang maks target, hentikan
+                if(curLen === target.length && !found) {
+                    // jika panjang sama dengan target dan belum ketemu, lanjut? tidak perlu karena panjang sudah sesuai, tapi tetap lanjut ke len+1 jika target lebih panjang?
+                    // namun target length sudah pass, tapi jika target lebih panjang dari maxLength? tidak mungkin karena maxLength = target.length
+                }
+            }
+            return false;
+        }
+        
+        // Fungsi utama dengan manajemen animasi dan reset
+        async function startBruteForce() {
+            if(isRunning) {
+                // jika sedang berjalan, abaikan
+                return;
+            }
+            
+            const rawTarget = targetInput.value.trim();
+            if(rawTarget === "") {
+                // efek getar input
+                targetInput.style.borderColor = "#ff5555";
+                setTimeout(() => targetInput.style.borderColor = "#00ffaa", 500);
+                return alert("⚡ Masukkan target password (max 4 karakter)!");
+            }
+            let target = rawTarget.toLowerCase();
+            // validasi karakter hanya dari set yang tersedia (a-z0-9)
+            for(let ch of target) {
+                if(!chars.includes(ch)) {
+                    alert(`Karakter '${ch}' tidak valid! Gunakan a-z atau 0-9.`);
+                    return;
+                }
+            }
+            if(target.length > 4) {
+                alert("Maksimal 4 karakter untuk performa simulasi.");
+                return;
+            }
+            
+            // Reset semua state
+            isRunning = true;
+            stopFlag = false;
+            attempts = 0;
+            startTime = Date.now();
+            
+            // reset visual UI
+            statusSpan.innerText = "🔄 SCANNING...";
+            displayArea.classList.remove('found');
+            displayArea.innerText = "____";
+            // reset dots styling
+            for(let i=0; i<checkDots.length; i++) {
+                checkDots[i].style.backgroundColor = "";
+                checkDots[i].style.boxShadow = "";
+                checkDots[i].classList.remove('active');
+            }
+            // normalin dot awal
+            for(let i=0;i<checkDots.length;i++) {
+                checkDots[i].style.backgroundColor = "#00ffaa";
+                checkDots[i].style.opacity = "0.4";
+            }
+            attemptsSpan.innerText = "0";
+            timerSpan.innerText = "0.00";
+            showTargetSpan.innerText = target;
+            
+            // jalankan brute force
+            let success = false;
+            try {
+                success = await tryAllCombinations(target.length, target);
+            } catch(err) {
+                console.warn(err);
+                statusSpan.innerText = "Error!";
+                isRunning = false;
+                stopFlag = true;
+                return;
+            }
+            
+            // Selesai proses
+            if(success && !stopFlag) {
+                // Sukses ditemukan
+                const finalGuess = target;
+                finalSuccessAnimation(finalGuess);
+                statusSpan.innerText = "💀 CRACKED! 💀";
+                // timer final
+                const finalTime = ((Date.now() - startTime) / 1000).toFixed(2);
+                timerSpan.innerText = finalTime;
+                // sedikit efek gemuruh
+            } else {
+                if(!stopFlag) {
+                    // Gagal? tapi secara teori pasti ketemu karena kombinasi lengkap (kecuali karakter invalid sudah dicegah)
+                    statusSpan.innerText = "Gagal? Karakter tidak support.";
+                    displayArea.innerText = "FAIL";
+                } else {
+                    statusSpan.innerText = "Dibatalkan";
+                }
+            }
+            
+            isRunning = false;
+            stopFlag = false;
+            
+            // jika sukses tambahan animasi suara visual? (tidak perlu suara)
+        }
+        
+        // tambahkan tombol stop? opsional, tapi supaya user bisa menghentikan jika terlalu lama, tapi kita buat tombol sederhana (inline)
+        // tidak wajib, tetapi lebih baik tombol reset/stop? tapi untuk keperluan "tambah animasi pengecekan" sudah lengkap.
+        // Saya tambahkan fitur stop dengan double click pada container? namun lebih baik simpel, 
+        // pengguna bisa refresh? tapi tidak perlu, agar tidak kompleks, fungsi stop manual dengan menekan tombol Mulai lagi saat berjalan akan diabaikan.
+        // Untuk pengalaman lebih baik, tambahkan indikator bahwa proses berjalan dan user bisa mereset dengan reload? tapi cukup.
+        
+        // Tambahkan info jika pengguna ingin menghentikan? Tidak mengganggu animasi utama.
+        // Bonus: pada saat proses berjalan, tombol "Mulai Crack" berubah jadi "Membajak..."? biar lebih jelas
+        const originalBtnText = "🔓 MULAI CRACK";
+        const crackBtn = document.querySelector('button');
+        
+        // override sedikit untuk mendeteksi perubahan state
+        const origStart = startBruteForce;
+        window.startBruteForce = async function() {
+            if(isRunning) {
+                // Opsi untuk stop? bisa ditambahkan interupsi dengan menekan tombol saat berjalan, 
+                // tapi karena brute force sangat cepat untuk max 4 karakter, stop tidak krusial, tapi lebih baik.
+                // Biar user bisa mereset halaman? tidak perlu, saya implementasi stop flag manual dengan tombol cancel? 
+                // Lebih elegan: ubah tombol jadi "Hentikan" saat running? mari kita lakukan agar semakin interaktif
+                if(confirm("Proses brute force sedang berjalan. Hentikan dan reset?")) {
+                    stopFlag = true;
+                    isRunning = false;
+                    statusSpan.innerText = "⏹️ Dihentikan";
+                    displayArea.innerText = "STOP";
+                    if(crackBtn) crackBtn.innerText = originalBtnText;
+                    // reset dots
+                    for(let i=0;i<checkDots.length;i++) {
+                        checkDots[i].style.backgroundColor = "#00ffaa";
+                        checkDots[i].style.opacity = "0.3";
+                        checkDots[i].classList.remove('active');
+                    }
+                    setTimeout(() => {
+                        if(statusSpan.innerText === "⏹️ Dihentikan") statusSpan.innerText = "Idle";
+                    }, 1500);
+                }
+                return;
+            }
+            // jalankan normal
+            if(crackBtn) crackBtn.innerText = "⚙️ CRACKING...";
+            await origStart();
+            if(crackBtn && !isRunning) crackBtn.innerText = originalBtnText;
+        };
+        
+        // juga update tombol jika proses selesai
+        const observer = new MutationObserver(() => {
+            if(!isRunning && crackBtn && crackBtn.innerText !== originalBtnText) {
+                crackBtn.innerText = originalBtnText;
+            }
+        });
+        if(crackBtn) observer.observe(crackBtn, { attributes: true, childList: true, subtree: false });
+        
+        // reset manual state jika target kosong dll
+        window.addEventListener('load', () => {
+            targetInput.value = "";
+            showTargetSpan.innerText = "-";
+            displayArea.innerText = "____";
+            for(let i=0;i<checkDots.length;i++) {
+                checkDots[i].style.backgroundColor = "#00ffaa";
+                checkDots[i].style.opacity = "0.3";
+            }
+        });
+        
+        // bersihkan status idle default
+        statusSpan.innerText = "Siap";
+    })();
+</script>
+</body>
+</html>

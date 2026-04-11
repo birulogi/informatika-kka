@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulasi Divide & Conquer - Merge Sort</title>
+    <style>
+        :root { --blue: #1a73e8; --dark: #202124; --gold: #f4b400; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 900px; text-align: center; }
+        
+        .array-container { display: flex; justify-content: center; align-items: flex-end; height: 200px; gap: 5px; margin: 20px 0; padding: 20px; background: #eee; border-radius: 10px; }
+        .bar { width: 30px; background: var(--blue); border-radius: 5px 5px 0 0; display: flex; align-items: flex-start; justify-content: center; color: white; font-size: 10px; font-weight: bold; padding-top: 5px; transition: 0.2s; }
+        
+        .controls { margin-top: 20px; display: flex; gap: 10px; justify-content: center; }
+        button { padding: 12px 25px; background: var(--blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        button:disabled { background: #ccc; }
+        
+        .step-info { background: #e8f0fe; padding: 15px; border-radius: 10px; margin-top: 20px; font-family: monospace; border-left: 5px solid var(--blue); text-align: left; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="color: var(--blue);">Merge Sort Visualizer</h2>
+    <p>Strategi: <b>Divide</b> (Belah daftar) & <b>Conquer</b> (Urutkan lalu Gabungkan)</p>
+
+    <div class="array-container" id="array-container"></div>
+
+    <div class="controls">
+        <button onclick="resetArray()">ACAK DATA</button>
+        <button id="sortBtn" onclick="startMergeSort()" style="background: var(--gold); color: black;">MULAI URUTKAN</button>
+    </div>
+
+    <div class="step-info" id="status">
+        Klik "ACAK DATA" lalu "MULAI URUTKAN" untuk melihat bagaimana daftar dibelah dan disusun kembali.
+    </div>
+</div>
+
+<script>
+    let array = [];
+    const container = document.getElementById('array-container');
+    const status = document.getElementById('status');
+
+    function resetArray() {
+        array = [];
+        container.innerHTML = '';
+        for (let i = 0; i < 20; i++) {
+            array.push(Math.floor(Math.random() * 90) + 10);
+        }
+        renderArray();
+        status.innerText = "Data berhasil diacak. Siap melakukan Divide & Conquer.";
+        document.getElementById('sortBtn').disabled = false;
+    }
+
+    function renderArray(activeIndices = [], color = '#1a73e8') {
+        container.innerHTML = '';
+        array.forEach((val, idx) => {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.height = `${val * 2}px`;
+            bar.innerText = val;
+            if (activeIndices.includes(idx)) {
+                bar.style.background = color;
+            }
+            container.appendChild(bar);
+        });
+    }
+
+    async function startMergeSort() {
+        document.getElementById('sortBtn').disabled = true;
+        await mergeSort(0, array.length - 1);
+        status.innerText = "SELESAI! Semua sub-masalah telah digabungkan menjadi daftar yang terurut.";
+    }
+
+    async function mergeSort(start, end) {
+        if (start >= end) return;
+
+        const mid = Math.floor((start + end) / 2);
+        
+        // Visualisasi DIVIDE
+        status.innerText = `DIVIDE: Membelah rentang [${start}-${end}] menjadi [${start}-${mid}] dan [${mid+1}-${end}]`;
+        renderArray([start, end], '#f4b400');
+        await new Promise(r => setTimeout(r, 600));
+
+        await mergeSort(start, mid);
+        await mergeSort(mid + 1, end);
+        await merge(start, mid, end);
+    }
+
+    async function merge(start, mid, end) {
+        let left = array.slice(start, mid + 1);
+        let right = array.slice(mid + 1, end + 1);
+        let i = 0, j = 0, k = start;
+
+        status.innerText = `CONQUER & COMBINE: Menyusun kembali potongan dari indeks ${start} sampai ${end}`;
+
+        while (i < left.length && j < right.length) {
+            if (left[i] <= right[j]) {
+                array[k] = left[i];
+                i++;
+            } else {
+                array[k] = right[j];
+                j++;
+            }
+            renderArray([k], '#1e8e3e');
+            await new Promise(r => setTimeout(r, 100));
+            k++;
+        }
+
+        while (i < left.length) {
+            array[k] = left[i];
+            i++; k++;
+            renderArray([k], '#1e8e3e');
+            await new Promise(r => setTimeout(r, 100));
+        }
+
+        while (j < right.length) {
+            array[k] = right[j];
+            j++; k++;
+            renderArray([k], '#1e8e3e');
+            await new Promise(r => setTimeout(r, 100));
+        }
+    }
+
+    resetArray();
+</script>
+</body>
+</html>
