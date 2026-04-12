@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Soal Informatika - Birulogi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #020617;
+            background-image: radial-gradient(circle at top right, #1e3a8a, transparent), 
+                              radial-gradient(circle at bottom left, #0f172a, transparent);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+        .glass-card:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            transform: scale(1.03);
+            cursor: pointer;
+        }
+        .swal2-popup {
+            background: rgba(15, 23, 42, 0.95) !important;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #fff !important;
+            border-radius: 1.5rem !important;
+        }
+    </style>
+</head>
+<body class="text-slate-200 p-4 md:p-10">
+
+    <header class="max-w-6xl mx-auto w-full mb-10">
+        <div class="flex items-center gap-4 mb-2">
+            <div class="h-1 w-12 bg-blue-500 rounded-full"></div>
+            <span class="text-blue-400 font-bold tracking-widest text-xs uppercase">Informatika — SMA KP Baleendah</span>
+        </div>
+        <h1 class="text-3xl font-black text-white">KISI-KISI <span class="text-blue-500">STS GENAP</span></h1>
+        <p class="text-slate-400 text-sm mt-1">Analisa Konten dan Indikator Soal berdasarkan Tujuan Pembelajaran.</p>
+    </header>
+
+    <main id="gridContainer" class="max-w-6xl mx-auto w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    </main>
+
+    <footer class="mt-auto pt-12 pb-8 text-center text-slate-600 text-[10px] tracking-[0.4em] uppercase">
+        Platform Edukasi — <span class="text-blue-500 font-bold">birulogi</span>
+    </footer>
+
+    <script>
+        const data = [
+            { judul: "Jenis Perangkat Lunak", kisi: "Disajikan deskripsi perangkat lunak yang tertanam pada sistem IoT atau mesin cuci, peserta didik dapat menyebutkan istilah jenis perangkat lunak tersebut." },
+            { judul: "Simbol Flowchart", kisi: "Disajikan daftar fungsi diagram alur, peserta didik dapat menentukan kegunaan simbol berbentuk oval." },
+            { judul: "Definisi SDLC", kisi: "Disajikan deskripsi siklus hidup dari perencanaan hingga pemeliharaan, peserta didik dapat menyebutkan nama siklus pengembangan tersebut." },
+            { judul: "Metodologi Waterfall", kisi: "Disajikan karakteristik pengembangan yang bersifat linier dan sekuensial, peserta didik dapat menentukan nama metodologi tersebut." },
+            { judul: "Tahap Deployment", kisi: "Disajikan aktivitas pemasangan aplikasi ke server atau toko aplikasi, peserta didik dapat menyebutkan nama tahapan pengembangannya." },
+            { judul: "Tahap Design", kisi: "Disajikan skenario pembuatan rancangan antarmuka (UI) sebelum koding, peserta didik dapat menentukan posisi tahapan tersebut dalam SDLC." },
+            { judul: "Metodologi Agile", kisi: "Disajikan kasus pengembangan aplikasi berdasarkan masukan pengguna secara berulang, peserta didik dapat menentukan metodologi yang paling sesuai." },
+            { judul: "Tahap UAT", kisi: "Disajikan aktivitas pengujian aplikasi oleh pengguna untuk memastikan kesesuaian fitur, peserta didik dapat mengidentifikasi jenis pengujian tersebut." },
+            { judul: "Keputusan Flowchart", kisi: "Disajikan kebutuhan logika untuk mengecek kebenaran data, peserta didik dapat menentukan simbol flowchart yang tepat." },
+            { judul: "Kebutuhan Non-Fungsional", kisi: "Disajikan fokus pengembangan pada aspek keamanan dan enkripsi, peserta didik dapat menganalisis jenis kebutuhan sistem tersebut." },
+            { judul: "Justifikasi Waterfall", kisi: "Disajikan skenario pengembangan sistem yang terencana total untuk regulasi hukum, peserta didik dapat mengevaluasi alasan penggunaan metodologi Waterfall." },
+            { judul: "Analisis Dampak Waterfall", kisi: "Disajikan permintaan fitur baru di tengah proses pengembangan linier, peserta didik dapat menganalisis konsekuensi teknis yang terjadi." },
+            { judul: "Strategi Algoritmik", kisi: "Disajikan definisi metode merancang langkah penyelesaian masalah secara sistematis, peserta didik dapat mengidentifikasi istilah pola berpikir tersebut." },
+            { judul: "Strategi Brute Force", kisi: "Disajikan metode penyelesaian masalah dengan mencoba semua kemungkinan satu per satu, peserta didik dapat menyebutkan nama strategi tersebut." },
+            { judul: "Case Sensitive", kisi: "Disajikan perbedaan eksekusi antara huruf kecil dan besar pada perintah print, peserta didik dapat memahami sifat bahasa pemrograman tersebut." },
+            { judul: "Tipe Data Integer", kisi: "Disajikan contoh angka tanpa koma, peserta didik dapat menyebutkan jenis tipe data yang tepat." },
+            { judul: "Komentar Python", kisi: "Disajikan daftar simbol, peserta didik dapat menentukan simbol yang digunakan untuk memberikan keterangan tulisan pada script." },
+            { judul: "Kasus Brute Force", kisi: "Disajikan kasus pencarian barang dengan menyisir seluruh area tanpa ada yang terlewat, peserta didik dapat mengidentifikasi strategi yang diterapkan." },
+            { judul: "Kasus Greedy", kisi: "Disajikan tindakan pengambilan keputusan berdasarkan keuntungan terbesar yang terlihat pertama kali, peserta didik dapat mengidentifikasi strategi yang digunakan." },
+            { judul: "Operator Modulus", kisi: "Disajikan persoalan perhitungan sisa bagi, peserta didik dapat menentukan operator Python yang tepat untuk menghasilkan nilai tertentu." },
+            { judul: "Perhitungan Luas", kisi: "Disajikan variabel dimensi, peserta didik dapat menerapkan kode Python yang benar untuk mencetak hasil perkalian keduanya." },
+            { judul: "Keunggulan Brute Force", kisi: "Disajikan pilihan strategi pada gudang kecil, peserta didik dapat menganalisis alasan pemilihan strategi yang menjamin penemuan solusi." },
+            { judul: "Keterbatasan Greedy", kisi: "Disajikan hasil rute navigasi yang tidak optimal, peserta didik dapat mengevaluasi kelemahan pengambilan keputusan berbasis langkah lokal." },
+            { judul: "Analisis D&C", kisi: "Disajikan struktur percakapan berjenjang (reply), peserta didik dapat menganalisis keterkaitannya dengan strategi bagi dan kuasai." },
+            { judul: "Analisis NameError", kisi: "Disajikan perbedaan penulisan kapitalisasi pada nama variabel dan pemanggilannya, peserta didik dapat menganalisis output program." },
+            { judul: "Analisis Kode Komentar", kisi: "Disajikan potongan kode yang mengandung komentar, peserta didik dapat menganalisis teks mana yang akan muncul di layar." },
+            { judul: "Penerapan Sisa Bagi", kisi: "Disajikan angka input, peserta didik dapat menerapkan baris kode Python yang menghasilkan nilai sisa pembagian tertentu." },
+            { judul: "Analisis Alur If-Else", kisi: "Disajikan variabel dengan nilai yang tidak memenuhi syarat kondisi utama, peserta didik dapat menganalisis output yang dihasilkan blok program." },
+            { judul: "Dinamisasi Variabel", kisi: "Disajikan urutan perubahan nilai variabel dari angka ke string, peserta didik dapat menganalisis mekanisme penyimpanan data terakhir." },
+            { judul: "Evaluasi Ternary", kisi: "Disajikan baris kode kondisi satu baris, peserta didik dapat mengevaluasi hasil akhir jika variabel input diubah." }
+        ];
+
+        const container = document.getElementById('gridContainer');
+
+        data.forEach((item, index) => {
+            const gridItem = document.createElement('div');
+            gridItem.className = 'glass-card p-4 rounded-xl flex flex-col justify-center items-center text-center';
+            gridItem.innerHTML = `
+                <span class="text-[10px] text-blue-400 font-mono mb-1 opacity-60">SOAL-${index + 1}</span>
+                <h3 class="text-xs md:text-sm font-bold leading-tight text-white uppercase tracking-tight">${item.judul}</h3>
+            `;
+            
+            gridItem.onclick = () => {
+                Swal.fire({
+                    title: `<span style="color:#60a5fa; font-size:18px;">${item.judul}</span>`,
+                    html: `<div style="text-align:left; font-size:14px; line-height:1.6; color:#cbd5e1;"><b>Indikator Soal:</b><br>${item.kisi}</div>`,
+                    confirmButtonText: 'Mengerti',
+                    confirmButtonColor: '#2563eb',
+                });
+            };
+            
+            container.appendChild(gridItem);
+        });
+    </script>
+</body>
+</html>
