@@ -1,1 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Informatika - Algoritma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --navy-dark: #0a192f;
+            --navy-light: #112240;
+            --blue-accent: #3b82f6;
+            --text-white: #e6f1ff;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
 
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--navy-dark), var(--navy-light));
+            background-attachment: fixed;
+            color: var(--text-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--blue-accent);
+        }
+
+        header p {
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        .grid-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border-color: var(--blue-accent);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--blue-accent);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .link-list {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0 0;
+        }
+
+        .link-list li {
+            margin-bottom: 10px;
+        }
+
+        .link-item {
+            display: block;
+            text-decoration: none;
+            color: var(--text-white);
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .link-item:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-left: 3px solid var(--blue-accent);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+        }
+
+        /* Responsivitas Smartphone */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.5rem; }
+            .grid-section { grid-template-columns: 1fr; }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Portal Algoritma Pemrograman</h1>
+        <p>Materi Pembelajaran untuk Peserta Didik</p>
+    </header>
+
+    <div class="grid-section">
+        <div class="card">
+            <h2>Brute Force</h2>
+            <ul class="link-list">
+                <li><a href="#" class="link-item" onclick="navigate('brute_force - Gembok Digital.html')">Gembok Digital</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('brute_force - Maze.html')">Maze (Labirin)</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('brute_force - Searching Nama Siswa.html')">Pencarian Nama Peserta Didik</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('brute_force -Kunci.html')">Kunci Akses</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Algoritma Greedy</h2>
+            <ul class="link-list">
+                <li><a href="#" class="link-item" onclick="navigate('greedy_Jalur _Terpendek.html')">Jalur Terpendek</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('greedy_coin.html')">Optimasi Koin</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('greedy_jalur_terpendek_visual_sederhana.html')">Visualisasi Jalur Terpendek</a></li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Divide and Conquer</h2>
+            <ul class="link-list">
+                <li><a href="#" class="link-item" onclick="navigate('divide_and_conquer_rekursi.html')">Konsep Rekursi</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('divide_and_conquer_sortir_angka.html')">Pengurutan Angka</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('divide_and_conquer_tebak_angka.html')">Tebak Angka</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('divide_and_conquer_tebak_angka_komputer.html')">Komputer Menebak Sendiri</a></li>
+                <li><a href="#" class="link-item" onclick="navigate('divide_and_conquer_tebak_angka_saya.html')">Menebak Angka Saya</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<footer>
+    birulogi &copy; 2026
+</footer>
+
+<script>
+    const baseUrl = "https://birulogi.github.io/informatika-kka/TP.11.2.2/";
+
+    function navigate(file) {
+        Swal.fire({
+            title: 'Buka Materi?',
+            text: "Anda akan menuju halaman " + file,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3b82f6',
+            cancelButtonColor: '#112240',
+            confirmButtonText: 'Ya, Buka!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = baseUrl + encodeURIComponent(file);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
